@@ -1,36 +1,63 @@
 #include <iostream>
-#include "search.cpp"
+#include <string>
+#include "test_for_search.cpp"
 
 using namespace std;
 
-void test_search() {
-    int arr[] = {1, 3, 5, 7, 9, 11};
-    int size = sizeof(arr) / sizeof(arr[0]);
-    int target = 7;
+Student* linear_search_student(Student* head , int student_id){
+    if(head == NULL){
+        return NULL;
+    }
+    Student* current = head;
+    while(current!= NULL){
+        if(current->id == student_id){
+            return current;
+        }
+        current = current->next;
+    }
+    return NULL;
+}
 
-    int linear_result = linear_search(arr, size, target);
-    int binary_result = binary_search(arr, size, target);
+Course* binary_search_course(Course* root, int course_id){
+    Course* current = root;
+    while (current != NULL){
+        if(current->id == course_id){
+            return current;
+        }
 
-    cout << "Linear Search Result: " << linear_result << endl;
-    cout << "Binary Search Result: " << binary_result << endl;
+        if(course_id > current->id){
+            current = current->right;
+        }
 
-    // Additional test cases
-    target = 4;
-    linear_result = linear_search(arr, size, target);
-    binary_result = binary_search(arr, size, target);
+        if(course_id < current->id){
+            current = current->left;
+        }
+    }
 
-    cout << "Linear Search Result (target 4): " << linear_result << endl;
-    cout << "Binary Search Result (target 4): " << binary_result << endl;
-
-    target = 11;
-    linear_result = linear_search(arr, size, target);
-    binary_result = binary_search(arr, size, target);
-
-    cout << "Linear Search Result (target 11): " << linear_result << endl;
-    cout << "Binary Search Result (target 11): " << binary_result << endl;
+    return current;
 }
 
 int main() {
-    test_search();
+    // Student Records Test
+    StudentRecords studentRecords;
+    studentRecords.add(1001, "Alice Johnson", "alice@example.com");
+    studentRecords.add(1002, "Bob Smith", "bob@example.com");
+    studentRecords.display();
+    studentRecords.remove(1001);
+    studentRecords.display();
+
+    // Course Records Test
+    CourseRecords courseRecords;
+    courseRecords.addCourse(2001, "Data Structures", 3);
+    courseRecords.addCourse(2002, "Algorithms", 4);
+    courseRecords.addCourse(2003, "Operating Systems", 3);
+    courseRecords.displayCourses();
+
+    //Search Test
+    Student* student = linear_search_student(studentRecords.get_head(), 1002);
+    Course* course = binary_search_course(courseRecords.get_root(), 2001);
+    
+    cout<<"Student: "<<student->name<<endl;
+    cout<<"Course: "<<course->name<<endl;
     return 0;
 }
