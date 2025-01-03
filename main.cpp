@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <algorithm>
+#include <vector>
 #include "test_for_search.cpp"
 
 using namespace std;
@@ -82,8 +83,6 @@ Student* sort_student(Student* head){
     return head;
 }
 
-
-
 int main() {
     // Student Records Test
     StudentRecords studentRecords;
@@ -93,25 +92,37 @@ int main() {
     studentRecords.add(1, "Bob Smith", "bob@example.com");
     studentRecords.add(10, "Alice Johnson", "alice@example.com");
     studentRecords.add(3, "Bob Smith", "bob@example.com");
-    //studentRecords.display();
-    //studentRecords.remove(1001);
+    studentRecords.display();
+    studentRecords.remove(10);
     studentRecords.display();
 
     // Course Records Test
-    //CourseRecords courseRecords;
-    //courseRecords.addCourse(2001, "Data Structures", 3);
-    //courseRecords.addCourse(2002, "Algorithms", 4);
-    //courseRecords.addCourse(2003, "Operating Systems", 3);
-    //courseRecords.displayCourses();
+    CourseRecords courseRecords;
+    courseRecords.addCourse(5, "Data Structures", 3);
+    courseRecords.addCourse(4, "Algorithms", 4);
+    courseRecords.addCourse(8, "Operating Systems", 3);
+    courseRecords.displayCourses();
 
     //Search Test
-    //Student* student = linear_search_student(studentRecords.get_head(), 1002);
-    //Course* course = binary_search_course(courseRecords.get_root(), 2001);
+    Student* student = linear_search_student(studentRecords.get_head(), 10);
+    Course* course = binary_search_course(courseRecords.get_root(), 4);
 
-    //cout<<"Student: "<<student->name<<endl;
-    //cout<<"Course: "<<course->name<<endl;
+    if(student == NULL){
+        cout<<"Student Not Found!"<<endl;
+    }
+    else{
+        cout<<"Student: "<<student->name<<endl;
+    }
+    if(course == NULL){
+        cout<<"Course: "<<course->name<<endl;
+    }
+    else{
+        cout<<"Course Not Found!"<<endl;
+    }
 
-    Student* student = sort_student(studentRecords.get_head());
+    //sort linked list by id
+    Student* student_sort = sort_student(studentRecords.get_head());
     studentRecords.display();
+
     return 0;
 }
