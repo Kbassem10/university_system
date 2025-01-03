@@ -1,4 +1,8 @@
+<<<<<<< Updated upstream
 //test 3ashan ashra7lohom
+=======
+//test 3ashan ashra7lohom 1
+>>>>>>> Stashed changes
 
 #include <iostream>
 #include <string>
