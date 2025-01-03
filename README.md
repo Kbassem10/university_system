@@ -73,9 +73,7 @@ Implement search and sort functionalities for: <br>
 - Students by ID.
 - Courses by ID.
 
-
-Bonus Part: <br>
-7. Fast Access Using Hashing <br>
+7. Fast Access Using Hashing "Bonus Part"<br>
 Enhance lookup efficiency with a Hash Table. <br>
 Requirements: <br>
 - Design a hashing function.
