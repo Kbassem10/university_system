@@ -315,7 +315,7 @@ public:
     {
         Course *temp=root;
         Course *parent=nullptr;
-    }
+
     // With one or no children
     while(temp!=nullptr && temp->id!= id){
         parent=temp;
@@ -371,6 +371,7 @@ public:
             nextparent->right=next->right;
         }
         delete next;
+    }
     }
     void display() {
         // 7d y3mlha 34an m4 3arf!!
