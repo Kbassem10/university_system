@@ -311,9 +311,72 @@ public:
             parent->right = newcourse;
         }
     }
-    void dropCourse()
+    void dropCourse(int id)
     {
+        Course *temp=root;
+        Course *parent=nullptr;
     }
+    // With one or no children
+    while(temp!=nullptr && temp->id!= id){
+        parent=temp;
+        if(id<temp->id){
+            temp=temp->left;
+
+        }
+        else{
+            temp=temp->right;
+        }
+    }
+    if(temp==nullptr){
+        cout<<"course does not exist";
+        return;
+    }
+    if(temp->left== nullptr || temp->right== nullptr){
+        Course *sorryNadeem;
+        if(temp->left != nullptr){
+            sorryNadeem= temp->left;
+        }
+        else{
+            sorryNadeem= temp->right;
+        }
+        if(parent==nullptr){
+            root=sorryNadeem;
+        }
+        else{
+            if (temp==parent->left){
+                parent->left=sorryNadeem;
+            }
+            else{
+                parent-> right=sorryNadeem;
+            }
+        }
+        delete temp;
+    }
+    else{// with 2 children
+        Course *next= temp->right;
+        Course *nextparent= temp;
+        while(next->left!=nullptr){
+            nextparent=next;
+            next=next->left;
+        }
+        temp->id=next->id;
+        temp->name=next->name;
+        temp->credits=next->credits;
+        temp->CourseInstructor=next->CourseInstructor;
+
+        if(nextparent->left==next){
+            nextparent->left=next->right;
+        }
+        else{
+            nextparent->right=next->right;
+        }
+        delete next;
+    }
+    void display() {
+        // 7d y3mlha 34an m4 3arf!!
+
+    }
+
 };
 Student *linear_search_student(Student *head, int student_id)
 {
