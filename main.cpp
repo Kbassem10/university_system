@@ -399,9 +399,205 @@ Student *sort_student(Student *head)
     return head;
 }
 
-int main()
-{
-    // Student Records Test
+class hash_table{
+private:
+    struct hash_node{
+        int key;
+        Course* value;
+        hash_node* next_node;
+    };
+    hash_node** table;
+    int table_size;
+public:
+    hash_table(int size) : table_size(size){
+        table = new hash_node*[table_size];
+        for (int i = 0; i < table_size; ++i) {
+            table[i] = NULL;
+        }
+    }
+
+    //hashing function
+    int hashFunction(int key) {
+        return key % table_size;
+    }
+
+    void insert_hash(int key, Course* value){
+        int index = hashFunction(key);
+        hash_node* new_node = new hash_node;
+        new_node->next_node = NULL;
+        new_node->key = key;
+        new_node->value = value;
+        if(table[index]){
+            hash_node* current = table[index];
+            while(current->next_node != NULL){
+                current = current->next_node;
+            }
+            current->next_node = new_node;
+        }
+        else{
+            table[index] = new_node;
+        }
+    }
+
+    Course* searchWithHashing(int key){
+        int index = hashFunction(key);
+        hash_node* current = table[index];
+        while(current != NULL){
+            if(current->value->id == key){
+                return current->value;
+            }
+            current = current->next_node;
+        }
+        return NULL;
+    }
+};
+
+void test_sort_student() {
+    // Helper function to print the student list
+    auto print_students = [](Student* head) {
+        Student* temp = head;
+        while (temp != nullptr) {
+            cout << "ID: " << temp->id << ", Name: " << temp->name << ", Email: " << temp->email << endl;
+            temp = temp->next;
+        }
+    };
+
+    // Edge Case 1: Sorting an empty list
+    Student* empty_list = nullptr;
+    cout << "Sorting an empty list:" << endl;
+    Student* sorted_empty_list = sort_student(empty_list);
+    print_students(sorted_empty_list);
+
+    // Edge Case 2: Sorting a list with one student
+    Student* single_student = new Student{1, "Alice Johnson", "alice@example.com"};
+    cout << "Sorting a list with one student:" << endl;
+    Student* sorted_single_student = sort_student(single_student);
+    print_students(sorted_single_student);
+
+    // Edge Case 3: Sorting a list with multiple students in random order
+    Student* student_list_random = new Student{3, "John Doe", "john@example.com"};
+    student_list_random->next = new Student{1, "Alice Johnson", "alice@example.com"};
+    student_list_random->next->next = new Student{2, "Bob Smith", "bob@example.com"};
+    cout << "Sorting a list with multiple students in random order:" << endl;
+    Student* sorted_student_list_random = sort_student(student_list_random);
+    print_students(sorted_student_list_random);
+
+    // Edge Case 4: Sorting a list with multiple students already in sorted order
+    Student* student_list_sorted = new Student{1, "Alice Johnson", "alice@example.com"};
+    student_list_sorted->next = new Student{2, "Bob Smith", "bob@example.com"};
+    student_list_sorted->next->next = new Student{3, "John Doe", "john@example.com"};
+    cout << "Sorting a list with multiple students already in sorted order:" << endl;
+    Student* sorted_student_list_sorted = sort_student(student_list_sorted);
+    print_students(sorted_student_list_sorted);
+
+    // Edge Case 5: Sorting a list with multiple students in reverse order
+    Student* student_list_reverse = new Student{3, "John Doe", "john@example.com"};
+    student_list_reverse->next = new Student{2, "Bob Smith", "bob@example.com"};
+    student_list_reverse->next->next = new Student{1, "Alice Johnson", "alice@example.com"};
+    cout << "Sorting a list with multiple students in reverse order:" << endl;
+    Student* sorted_student_list_reverse = sort_student(student_list_reverse);
+    print_students(sorted_student_list_reverse);
+
+    // Edge Case 6: Sorting a list with duplicate student IDs
+    Student* student_list_duplicates = new Student{2, "John Doe", "john@example.com"};
+    student_list_duplicates->next = new Student{1, "Alice Johnson", "alice@example.com"};
+    student_list_duplicates->next->next = new Student{2, "Bob Smith", "bob@example.com"};
+    cout << "Sorting a list with duplicate student IDs:" << endl;
+    Student* sorted_student_list_duplicates = sort_student(student_list_duplicates);
+    print_students(sorted_student_list_duplicates);
+
+    // Clean up dynamically allocated memory
+    auto delete_list = [](Student* head) {
+        while (head != nullptr) {
+            Student* temp = head;
+            head = head->next;
+            delete temp;
+        }
+    };
+
+    delete_list(sorted_single_student);
+    delete_list(sorted_student_list_random);
+    delete_list(sorted_student_list_sorted);
+    delete_list(sorted_student_list_reverse);
+    delete_list(sorted_student_list_duplicates);
+}
+
+void hash_table_test() {
+    // Hash Table Test
+    hash_table courseHashTable(10);
+
+    // Edge Case 1: Inserting a course into an empty hash table
+    Course* course1 = new Course(1, "Mathematics", 3);
+    courseHashTable.insert_hash(course1->id, course1);
+    cout << "Inserted course: " << course1->name << endl;
+
+    // Edge Case 2: Inserting multiple courses with unique keys
+    Course* course2 = new Course(2, "Physics", 4);
+    Course* course3 = new Course(3, "Chemistry", 3);
+    courseHashTable.insert_hash(course2->id, course2);
+    courseHashTable.insert_hash(course3->id, course3);
+    cout << "Inserted courses: " << course2->name << ", " << course3->name << endl;
+
+    // Edge Case 3: Inserting multiple courses with colliding keys (same hash index)
+    Course* course4 = new Course(12, "Biology", 3); // 12 % 10 == 2
+    courseHashTable.insert_hash(course4->id, course4);
+    cout << "Inserted course with collision: " << course4->name << endl;
+
+    // Edge Case 4: Searching for a course that exists
+    Course* searchResult = courseHashTable.searchWithHashing(12);
+    if (searchResult) {
+        cout << "Found course: " << searchResult->name << endl;
+    } else {
+        cout << "Course not found." << endl;
+    }
+
+    // Edge Case 5: Searching for a course that does not exist
+    searchResult = courseHashTable.searchWithHashing(10);
+    if (searchResult) {
+        cout << "Found course: " << searchResult->name << endl;
+    } else {
+        cout << "Course not found." << endl;
+    }
+
+    // Edge Case 6: Inserting a course with a duplicate key
+    Course* course5 = new Course(2, "Advanced Physics", 5);
+    courseHashTable.insert_hash(course5->id, course5);
+    cout << "Inserted course with duplicate key: " << course5->name << endl;
+    searchResult = courseHashTable.searchWithHashing(2);
+    if (searchResult) {
+        cout << "Found course after duplicate insert: " << searchResult->name << endl;
+    } else {
+        cout << "Course not found after duplicate insert." << endl;
+    }
+
+    // Edge Case 7: Handling a large number of insertions to test performance and collisions
+    for (int i = 100; i < 110; ++i) {
+        Course* course = new Course(i, "Course " + to_string(i), 3);
+        courseHashTable.insert_hash(course->id, course);
+    }
+    for (int i = 100; i < 110; ++i) {
+        searchResult = courseHashTable.searchWithHashing(i);
+        if (searchResult) {
+            cout << "Found course: " << searchResult->name << endl;
+        } else {
+            cout << "Course not found: " << i << endl;
+        }
+    }
+
+    // Clean up dynamically allocated memory
+    delete course1;
+    delete course2;
+    delete course3;
+    delete course4;
+    delete course5;
+    for (int i = 100; i < 110; ++i) {
+        Course* course = courseHashTable.searchWithHashing(i);
+        delete course;
+    }
+}
+
+void test_case(){
+        // Student Records Test
     StudentRecords studentRecords;
     studentRecords.add(7, "Alice Johnson", "alice@example.com");
     studentRecords.add(5, "Bob Smith", "bob@example.com");
@@ -469,6 +665,11 @@ int main()
 
     testCourse->waitlist.dequeue();
     delete testCourse;
+}
 
+int main() {
+    //hash_table_test();
+    //test_sort_student();
+    //test_case();
     return 0;
 }
