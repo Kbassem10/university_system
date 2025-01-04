@@ -236,73 +236,76 @@ public:
     }
 };
 
-struct Course
-{
-    int id;
-    string name;
-    int credits;
-    Course *left;
-    Course *right;
-    Course_Waitlist waitlist;
-
-    Course(int id, const string &name, int credits)
-        : id(id), name(name), credits(credits), left(nullptr), right(nullptr) {}
+class course{
+public:
+    int CourseID;
+    string CourseName;
+    int CourseCredits;
+    string CourseInstructor;
+     course* left;
+     course* right;
+    course(int CourseID,string CourseName,int CourseCredits,string CourseInstructor){
+        CourseID=idcourse;
+        CourseName=namecourse;
+        CourseCredits=creditscourse;
+        CourseInstructor=teachers;
+        left=nullptr;
+        right=nullptr;
+    }
 };
 
-class CourseRecords // Fahmy yeshel w yktbha Raqam 2
+class bst // Fahmy yeshel w yktbha Raqam 2
 {
 private:
-    Course *root;
+    course *root;
+    course *findmin(course *node){  // 3ashan lma agy a3ml delete f drop course func.
+        while(node&&node->left!=nullptr){
+            node=node->left;
+        }
+        return node;
 
-    void addCourseHelper(Course *&node, int id, const string &name, int credits)
-    {
-        if (!node)
-        {
-            node = new Course(id, name, credits);
-            cout << "Course added: " << name << endl;
-            return;
-        }
-        if (id < node->id)
-        {
-            addCourseHelper(node->left, id, name, credits);
-        }
-        else if (id > node->id)
-        {
-            addCourseHelper(node->right, id, name, credits);
-        }
-        else
-        {
-            cout << "Course ID already exists.\n";
-        }
     }
-
-    void displayCoursesHelper(Course *node) const
-    {
-        if (!node)
-            return;
-        displayCoursesHelper(node->left);
-        cout << "ID: " << node->id << ", Name: " << node->name << ", Credits: " << node->credits << endl;
-        displayCoursesHelper(node->right);
-    }
-
 public:
-    Course *get_root()
-    {
-        return root;
+    bst(){
+        root=nullptr;
+    }
+    void addcourse(int idcourse, string namecourse, int creditscourse, string teachers ){
+        course *newcourse= new course(idcourse,namecourse,creditscourse,teachers);
+        if(root==nullptr){
+            root=newcourse;
+            return;
+        }
+        course *temp=root;
+        course *parent=nullptr; //-------------> parent variable 3ashan lma temp yeb2a b null (5alas position is found) the parent variable bya5od reference elly kan a5r 7aga 3ndha
+            while(temp!=nullptr){
+                parent=temp;
+                if(idcourse<temp->CourseID){
+                    temp=temp->left;
+
+                }
+                else if(idcourse> temp->CourseID){
+                    temp=temp->right;
+
+                }
+                else{
+                    cout<<" this course is already exist";
+                    delete newcourse;
+                    return;
+                }
+            }
+            if (idcourse<parent->CourseID){
+                parent->left=newcourse;
+            }
+            else{
+                parent->right=newcourse;
+            }
+
+    }
+    void dropCourse(){
+
     }
 
-    CourseRecords() : root(nullptr) {}
 
-    void addCourse(int id, const string &name, int credits)
-    {
-        addCourseHelper(root, id, name, credits);
-    }
-
-    void displayCourses() const
-    {
-        cout << "Course Records:\n";
-        displayCoursesHelper(root);
-    }
 };
 Student *linear_search_student(Student *head, int student_id)
 {
