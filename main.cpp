@@ -264,6 +264,12 @@ private:
     }
 
 public:
+    Course* get_root() const
+    {
+        return root;
+    }
+
+public:
     bst()
     {
         root = nullptr;
@@ -551,19 +557,19 @@ void hash_table_test()
     hash_table courseHashTable(10);
 
     // Edge Case 1: Inserting a course into an empty hash table
-    Course *course1 = new Course(1, "Mathematics", 3);
+    Course *course1 = new Course(1, "Mathematics", 3, "Dr. Smith");
     courseHashTable.insert_hash(course1->id, course1);
     cout << "Inserted course: " << course1->name << endl;
 
     // Edge Case 2: Inserting multiple courses with unique keys
-    Course *course2 = new Course(2, "Physics", 4);
-    Course *course3 = new Course(3, "Chemistry", 3);
+    Course *course2 = new Course(2, "Physics", 4, "Dr. Brown");
+    Course *course3 = new Course(3, "Chemistry", 3, "Dr. Green");
     courseHashTable.insert_hash(course2->id, course2);
     courseHashTable.insert_hash(course3->id, course3);
     cout << "Inserted courses: " << course2->name << ", " << course3->name << endl;
 
     // Edge Case 3: Inserting multiple courses with colliding keys (same hash index)
-    Course *course4 = new Course(12, "Biology", 3); // 12 % 10 == 2
+    Course *course4 = new Course(12, "Biology", 3, "Dr. White"); // 12 % 10 == 2
     courseHashTable.insert_hash(course4->id, course4);
     cout << "Inserted course with collision: " << course4->name << endl;
 
@@ -590,7 +596,7 @@ void hash_table_test()
     }
 
     // Edge Case 6: Inserting a course with a duplicate key
-    Course *course5 = new Course(2, "Advanced Physics", 5);
+    Course *course5 = new Course(2, "Advanced Physics", 5, "Dr. Einstein");
     courseHashTable.insert_hash(course5->id, course5);
     cout << "Inserted course with duplicate key: " << course5->name << endl;
     searchResult = courseHashTable.searchWithHashing(2);
@@ -606,7 +612,7 @@ void hash_table_test()
     // Edge Case 7: Handling a large number of insertions to test performance and collisions
     for (int i = 100; i < 110; ++i)
     {
-        Course *course = new Course(i, "Course " + to_string(i), 3);
+        Course *course = new Course(i, "Course " + to_string(i), 3, "Instructor " + to_string(i));
         courseHashTable.insert_hash(course->id, course);
     }
     for (int i = 100; i < 110; ++i)
@@ -650,11 +656,12 @@ void test_case()
     studentRecords.display();
 
     // Course Records Test
-    CourseRecords courseRecords;
-    courseRecords.addCourse(5, "Data Structures", 3);
-    courseRecords.addCourse(4, "Algorithms", 4);
-    courseRecords.addCourse(8, "Operating Systems", 3);
-    courseRecords.displayCourses();
+    bst courseRecords;
+    bst courseRecords;
+    courseRecords.addcourse(5, "Data Structures", 3, "Dr. Smith");
+    courseRecords.addcourse(4, "Algorithms", 4, "Dr. Brown");
+    courseRecords.addcourse(8, "Operating Systems", 3, "Dr. Green");
+    // courseRecords.displayCourses(); // Uncomment this line if displayCourses method is implemented
 
     // Search Test
     Student *student = linear_search_student(studentRecords.get_head(), 3);
@@ -692,7 +699,7 @@ void test_case()
 
     // Course waitlist test
     cout << "\nCourse Waitlist Test:\n";
-    Course *testCourse = new Course(10, "Artificial Intelligence", 4);
+    Course *testCourse = new Course(10, "Artificial Intelligence", 4, "Dr. Watson");
     testCourse->waitlist.enqueue("John Doe");
     testCourse->waitlist.enqueue("Lionel Messi");
     testCourse->waitlist.displayWaitlist();
