@@ -263,6 +263,13 @@ private:
         return node;
     }
 
+    void displayHelper(Course* node) {
+        if (!node) return;
+        displayHelper(node->left);
+        cout << "ID: " << node->id << ", Name: " << node->name << ", Credits: " << node->credits << ", Instructor: " << node->CourseInstructor << endl;
+        displayHelper(node->right);
+    }
+
 public:
     Course* get_root() const
     {
@@ -375,6 +382,7 @@ public:
     }
     void display() {
         // 7d y3mlha 34an m4 3arf!!
+        displayHelper(root);
 
     }
 
@@ -770,7 +778,6 @@ void test_case()
 
     // Course Records Test
     bst courseRecords;
-    bst courseRecords;
     courseRecords.addcourse(5, "Data Structures", 3, "Dr. Smith");
     courseRecords.addcourse(4, "Algorithms", 4, "Dr. Brown");
     courseRecords.addcourse(8, "Operating Systems", 3, "Dr. Green");
@@ -827,10 +834,78 @@ void test_case()
     delete testCourse;
 }
 
+void test_bst() {
+    bst courseTree;
+
+    // Test Case 1: Inserting nodes into the BST
+    courseTree.addcourse(5, "Data Structures", 3, "Dr. Smith");
+    courseTree.addcourse(3, "Algorithms", 4, "Dr. Johnson");
+    courseTree.addcourse(8, "Operating Systems", 3, "Dr. Lee");
+    courseTree.addcourse(1, "Discrete Mathematics", 3, "Dr. Brown");
+    courseTree.addcourse(4, "Computer Networks", 3, "Dr. White");
+    courseTree.addcourse(7, "Database Systems", 3, "Dr. Green");
+    courseTree.addcourse(10, "Artificial Intelligence", 3, "Dr. Black");
+    cout << "Inserted courses:" << endl;
+    courseTree.display();
+
+    // Test Case 2: Searching for nodes in the BST
+    Course* searchResult = courseTree.get_root();
+    while (searchResult != nullptr && searchResult->id != 4) {
+        if (4 < searchResult->id) {
+            searchResult = searchResult->left;
+        } else {
+            searchResult = searchResult->right;
+        }
+    }
+    if (searchResult) {
+        cout << "Found course: " << searchResult->name << endl;
+    } else {
+        cout << "Course not found." << endl;
+    }
+
+    searchResult = courseTree.get_root();
+    while (searchResult != nullptr && searchResult->id != 6) {
+        if (6 < searchResult->id) {
+            searchResult = searchResult->left;
+        } else {
+            searchResult = searchResult->right;
+        }
+    }
+    if (searchResult) {
+        cout << "Found course: " << searchResult->name << endl;
+    } else {
+        cout << "Course not found." << endl;
+    }
+
+    // Test Case 3: Removing nodes from the BST
+    courseTree.dropCourse(3);
+    cout << "Removed course with ID 3:" << endl;
+    courseTree.display();
+
+    courseTree.dropCourse(8);
+    cout << "Removed course with ID 8:" << endl;
+    courseTree.display();
+
+    courseTree.dropCourse(5);
+    cout << "Removed course with ID 5:" << endl;
+    courseTree.display();
+
+    // Additional Test Case: Removing the root node
+    courseTree.dropCourse(1);
+    cout << "Removed course with ID 1 (root):" << endl;
+    courseTree.display();
+
+    // Additional Test Case: Removing a non-existent node
+    courseTree.dropCourse(999);
+    cout << "Attempted to remove non-existent course with ID 999:" << endl;
+    courseTree.display();
+}
+
 int main()
 {
     // hash_table_test();
     // test_sort_student();
     // test_case();
+    test_bst();
     return 0;
 }
