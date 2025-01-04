@@ -410,72 +410,121 @@ Student *sort_student(Student *head)
     return head;
 }
 
-class hash_table
-{
+class hash_table{
 private:
-    struct hash_node
-    {
+    struct hash_node{
         int key;
-        Course *value;
-        hash_node *next_node;
+        Course* value;
+        hash_node* next_node;
     };
-    hash_node **table;
+    hash_node** table;
     int table_size;
+    int num_elements;
+
+    void rehash() {
+        int old_table_size = table_size;
+        table_size *= 2;
+        hash_node** new_table = new hash_node*[table_size];
+        for (int i = 0; i < table_size; ++i) {
+            new_table[i] = NULL;
+        }
+
+        for (int i = 0; i < old_table_size; ++i) {
+            hash_node* current = table[i];
+            while (current != NULL) {
+                hash_node* next = current->next_node;
+                int new_index = hashFunction(current->key);
+                current->next_node = new_table[new_index];
+                new_table[new_index] = current;
+                current = next;
+            }
+        }
+
+        delete[] table;
+        table = new_table;
+    }
 
 public:
-    hash_table(int size) : table_size(size)
-    {
-        table = new hash_node *[table_size];
-        for (int i = 0; i < table_size; ++i)
-        {
+    hash_table() {
+        table_size = 10;
+        num_elements = 0;
+        table = new hash_node*[table_size];
+        for (int i = 0; i < table_size; ++i) {
             table[i] = NULL;
         }
     }
 
-    // hashing function
-    int hashFunction(int key)
-    {
+    //hashing function
+    int hashFunction(int key) {
         return key % table_size;
     }
 
-    void insert_hash(int key, Course *value)
-    {
+    void insert_hash(Course* value){
+        int key = value->id;
+
+        if(num_elements > table_size){
+            rehash();
+        }
+
         int index = hashFunction(key);
-        hash_node *new_node = new hash_node;
+        hash_node* new_node = new hash_node;
         new_node->next_node = NULL;
         new_node->key = key;
         new_node->value = value;
-        if (table[index])
-        {
-            hash_node *current = table[index];
-            while (current->next_node != NULL)
-            {
+        if(table[index]){
+            hash_node* current = table[index];
+            while(current->next_node != NULL){
                 current = current->next_node;
             }
             current->next_node = new_node;
         }
-        else
-        {
+        else{
             table[index] = new_node;
         }
+        num_elements++;
     }
 
-    Course *searchWithHashing(int key)
-    {
+    Course* searchWithHashing(int key){
         int index = hashFunction(key);
-        hash_node *current = table[index];
-        while (current != NULL)
-        {
-            if (current->value->id == key)
-            {
+        hash_node* current = table[index];
+        while(current != NULL){
+            if(current->value->id == key){
                 return current->value;
             }
             current = current->next_node;
         }
         return NULL;
     }
-};
 
+    int remove_from_hash(int key){
+        int index = hashFunction(key);
+        hash_node* current = table[index];
+        hash_node* prev = NULL;
+
+        while(current != NULL){
+            if(current->value->id == key){
+                break;
+            }
+            prev = current;
+            current = current->next_node;
+        }
+
+        if(current == NULL){
+            return 0;
+        }
+
+        if(prev == NULL){
+            table[index] = current->next_node;
+        }
+        else{
+            prev->next_node = current->next_node;
+        }
+
+        delete current;
+        num_elements--;
+        return 1;
+    }
+};
 void test_sort_student()
 {
     // Helper function to print the student list
@@ -554,23 +603,23 @@ void test_sort_student()
 void hash_table_test()
 {
     // Hash Table Test
-    hash_table courseHashTable(10);
+    hash_table courseHashTable;
 
     // Edge Case 1: Inserting a course into an empty hash table
     Course *course1 = new Course(1, "Mathematics", 3, "Dr. Smith");
-    courseHashTable.insert_hash(course1->id, course1);
+    courseHashTable.insert_hash(course1);
     cout << "Inserted course: " << course1->name << endl;
 
     // Edge Case 2: Inserting multiple courses with unique keys
     Course *course2 = new Course(2, "Physics", 4, "Dr. Brown");
     Course *course3 = new Course(3, "Chemistry", 3, "Dr. Green");
-    courseHashTable.insert_hash(course2->id, course2);
-    courseHashTable.insert_hash(course3->id, course3);
+    courseHashTable.insert_hash(course2);
+    courseHashTable.insert_hash(course3);
     cout << "Inserted courses: " << course2->name << ", " << course3->name << endl;
 
     // Edge Case 3: Inserting multiple courses with colliding keys (same hash index)
     Course *course4 = new Course(12, "Biology", 3, "Dr. White"); // 12 % 10 == 2
-    courseHashTable.insert_hash(course4->id, course4);
+    courseHashTable.insert_hash(course4);
     cout << "Inserted course with collision: " << course4->name << endl;
 
     // Edge Case 4: Searching for a course that exists
@@ -597,7 +646,7 @@ void hash_table_test()
 
     // Edge Case 6: Inserting a course with a duplicate key
     Course *course5 = new Course(2, "Advanced Physics", 5, "Dr. Einstein");
-    courseHashTable.insert_hash(course5->id, course5);
+    courseHashTable.insert_hash(course5);
     cout << "Inserted course with duplicate key: " << course5->name << endl;
     searchResult = courseHashTable.searchWithHashing(2);
     if (searchResult)
@@ -613,7 +662,7 @@ void hash_table_test()
     for (int i = 100; i < 110; ++i)
     {
         Course *course = new Course(i, "Course " + to_string(i), 3, "Instructor " + to_string(i));
-        courseHashTable.insert_hash(course->id, course);
+        courseHashTable.insert_hash(course);
     }
     for (int i = 100; i < 110; ++i)
     {
