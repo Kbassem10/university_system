@@ -236,76 +236,78 @@ public:
     }
 };
 
-class course{
-public:
-    int CourseID;
-    string CourseName;
-    int CourseCredits;
+struct Course
+{
+    int id;
+    string name;
+    int credits;
+    Course *left;
+    Course *right;
+    Course_Waitlist waitlist;
     string CourseInstructor;
-     course* left;
-     course* right;
-    course(int CourseID,string CourseName,int CourseCredits,string CourseInstructor){
-        CourseID=idcourse;
-        CourseName=namecourse;
-        CourseCredits=creditscourse;
-        CourseInstructor=teachers;
-        left=nullptr;
-        right=nullptr;
-    }
+
+    Course(int id, const string &name, int credits, const string &CourseInstructor)
+        : id(id), name(name), credits(credits), left(nullptr), right(nullptr), CourseInstructor(CourseInstructor) {}
 };
 
 class bst // Fahmy yeshel w yktbha Raqam 2
 {
 private:
-    course *root;
-    course *findmin(course *node){  // 3ashan lma agy a3ml delete f drop course func.
-        while(node&&node->left!=nullptr){
-            node=node->left;
+    Course *root;
+    Course *findmin(Course *node)
+    { // 3ashan lma agy a3ml delete f drop course func.
+        while (node && node->left != nullptr)
+        {
+            node = node->left;
         }
         return node;
+    }
 
-    }
 public:
-    bst(){
-        root=nullptr;
+    bst()
+    {
+        root = nullptr;
     }
-    void addcourse(int idcourse, string namecourse, int creditscourse, string teachers ){
-        course *newcourse= new course(idcourse,namecourse,creditscourse,teachers);
-        if(root==nullptr){
-            root=newcourse;
+    void addcourse(int idcourse, string namecourse, int creditscourse, string teachers)
+    {
+        Course *newcourse = new Course(idcourse, namecourse, creditscourse, teachers);
+        if (root == nullptr)
+        {
+            root = newcourse;
             return;
         }
-        course *temp=root;
-        course *parent=nullptr; //-------------> parent variable 3ashan lma temp yeb2a b null (5alas position is found) the parent variable bya5od reference elly kan a5r 7aga 3ndha
-            while(temp!=nullptr){
-                parent=temp;
-                if(idcourse<temp->CourseID){
-                    temp=temp->left;
-
-                }
-                else if(idcourse> temp->CourseID){
-                    temp=temp->right;
-
-                }
-                else{
-                    cout<<" this course is already exist";
-                    delete newcourse;
-                    return;
-                }
+        Course *temp = root;
+        Course *parent = nullptr; //-------------> parent variable 3ashan lma temp yeb2a b null (5alas position is found) the parent variable bya5od reference elly kan a5r 7aga 3ndha
+        while (temp != nullptr)
+        {
+            parent = temp;
+            if (idcourse < temp->id)
+            {
+                temp = temp->left;
             }
-            if (idcourse<parent->CourseID){
-                parent->left=newcourse;
+            else if (idcourse > temp->id)
+            {
+                temp = temp->right;
             }
-            else{
-                parent->right=newcourse;
+            else
+            {
+                cout << " this course is already exist";
+                delete newcourse;
+                return;
             }
-
+        }
+        if (idcourse < parent->id)
+        {
+            parent->left = newcourse;
+        }
+        else
+        {
+            parent->right = newcourse;
+        }
     }
-    void dropCourse(){
-
+    void dropCourse()
+    {
     }
-
-
 };
 Student *linear_search_student(Student *head, int student_id)
 {
@@ -402,51 +404,64 @@ Student *sort_student(Student *head)
     return head;
 }
 
-class hash_table{
+class hash_table
+{
 private:
-    struct hash_node{
+    struct hash_node
+    {
         int key;
-        Course* value;
-        hash_node* next_node;
+        Course *value;
+        hash_node *next_node;
     };
-    hash_node** table;
+    hash_node **table;
     int table_size;
+
 public:
-    hash_table(int size) : table_size(size){
-        table = new hash_node*[table_size];
-        for (int i = 0; i < table_size; ++i) {
+    hash_table(int size) : table_size(size)
+    {
+        table = new hash_node *[table_size];
+        for (int i = 0; i < table_size; ++i)
+        {
             table[i] = NULL;
         }
     }
 
-    //hashing function
-    int hashFunction(int key) {
+    // hashing function
+    int hashFunction(int key)
+    {
         return key % table_size;
     }
 
-    void insert_hash(int key, Course* value){
+    void insert_hash(int key, Course *value)
+    {
         int index = hashFunction(key);
-        hash_node* new_node = new hash_node;
+        hash_node *new_node = new hash_node;
         new_node->next_node = NULL;
         new_node->key = key;
         new_node->value = value;
-        if(table[index]){
-            hash_node* current = table[index];
-            while(current->next_node != NULL){
+        if (table[index])
+        {
+            hash_node *current = table[index];
+            while (current->next_node != NULL)
+            {
                 current = current->next_node;
             }
             current->next_node = new_node;
         }
-        else{
+        else
+        {
             table[index] = new_node;
         }
     }
 
-    Course* searchWithHashing(int key){
+    Course *searchWithHashing(int key)
+    {
         int index = hashFunction(key);
-        hash_node* current = table[index];
-        while(current != NULL){
-            if(current->value->id == key){
+        hash_node *current = table[index];
+        while (current != NULL)
+        {
+            if (current->value->id == key)
+            {
                 return current->value;
             }
             current = current->next_node;
@@ -455,64 +470,69 @@ public:
     }
 };
 
-void test_sort_student() {
+void test_sort_student()
+{
     // Helper function to print the student list
-    auto print_students = [](Student* head) {
-        Student* temp = head;
-        while (temp != nullptr) {
+    auto print_students = [](Student *head)
+    {
+        Student *temp = head;
+        while (temp != nullptr)
+        {
             cout << "ID: " << temp->id << ", Name: " << temp->name << ", Email: " << temp->email << endl;
             temp = temp->next;
         }
     };
 
     // Edge Case 1: Sorting an empty list
-    Student* empty_list = nullptr;
+    Student *empty_list = nullptr;
     cout << "Sorting an empty list:" << endl;
-    Student* sorted_empty_list = sort_student(empty_list);
+    Student *sorted_empty_list = sort_student(empty_list);
     print_students(sorted_empty_list);
 
     // Edge Case 2: Sorting a list with one student
-    Student* single_student = new Student{1, "Alice Johnson", "alice@example.com"};
+    Student *single_student = new Student{1, "Alice Johnson", "alice@example.com"};
     cout << "Sorting a list with one student:" << endl;
-    Student* sorted_single_student = sort_student(single_student);
+    Student *sorted_single_student = sort_student(single_student);
     print_students(sorted_single_student);
 
     // Edge Case 3: Sorting a list with multiple students in random order
-    Student* student_list_random = new Student{3, "John Doe", "john@example.com"};
+    Student *student_list_random = new Student{3, "John Doe", "john@example.com"};
     student_list_random->next = new Student{1, "Alice Johnson", "alice@example.com"};
     student_list_random->next->next = new Student{2, "Bob Smith", "bob@example.com"};
     cout << "Sorting a list with multiple students in random order:" << endl;
-    Student* sorted_student_list_random = sort_student(student_list_random);
+    Student *sorted_student_list_random = sort_student(student_list_random);
     print_students(sorted_student_list_random);
 
     // Edge Case 4: Sorting a list with multiple students already in sorted order
-    Student* student_list_sorted = new Student{1, "Alice Johnson", "alice@example.com"};
+    Student *student_list_sorted = new Student{1, "Alice Johnson", "alice@example.com"};
     student_list_sorted->next = new Student{2, "Bob Smith", "bob@example.com"};
     student_list_sorted->next->next = new Student{3, "John Doe", "john@example.com"};
     cout << "Sorting a list with multiple students already in sorted order:" << endl;
-    Student* sorted_student_list_sorted = sort_student(student_list_sorted);
+    Student *sorted_student_list_sorted = sort_student(student_list_sorted);
     print_students(sorted_student_list_sorted);
 
     // Edge Case 5: Sorting a list with multiple students in reverse order
-    Student* student_list_reverse = new Student{3, "John Doe", "john@example.com"};
+    Student *student_list_reverse = new Student{3, "John Doe", "john@example.com"};
     student_list_reverse->next = new Student{2, "Bob Smith", "bob@example.com"};
     student_list_reverse->next->next = new Student{1, "Alice Johnson", "alice@example.com"};
     cout << "Sorting a list with multiple students in reverse order:" << endl;
-    Student* sorted_student_list_reverse = sort_student(student_list_reverse);
+    Student *sorted_student_list_reverse = sort_student(student_list_reverse);
     print_students(sorted_student_list_reverse);
 
     // Edge Case 6: Sorting a list with duplicate student IDs
-    Student* student_list_duplicates = new Student{2, "John Doe", "john@example.com"};
+    Student *student_list_duplicates = new Student{2, "John Doe", "john@example.com"};
     student_list_duplicates->next = new Student{1, "Alice Johnson", "alice@example.com"};
     student_list_duplicates->next->next = new Student{2, "Bob Smith", "bob@example.com"};
     cout << "Sorting a list with duplicate student IDs:" << endl;
-    Student* sorted_student_list_duplicates = sort_student(student_list_duplicates);
+    Student *sorted_student_list_duplicates = sort_student(student_list_duplicates);
     print_students(sorted_student_list_duplicates);
 
     // Clean up dynamically allocated memory
-    auto delete_list = [](Student* head) {
-        while (head != nullptr) {
-            Student* temp = head;
+    auto delete_list = [](Student *head)
+    {
+        while (head != nullptr)
+        {
+            Student *temp = head;
             head = head->next;
             delete temp;
         }
@@ -525,64 +545,79 @@ void test_sort_student() {
     delete_list(sorted_student_list_duplicates);
 }
 
-void hash_table_test() {
+void hash_table_test()
+{
     // Hash Table Test
     hash_table courseHashTable(10);
 
     // Edge Case 1: Inserting a course into an empty hash table
-    Course* course1 = new Course(1, "Mathematics", 3);
+    Course *course1 = new Course(1, "Mathematics", 3);
     courseHashTable.insert_hash(course1->id, course1);
     cout << "Inserted course: " << course1->name << endl;
 
     // Edge Case 2: Inserting multiple courses with unique keys
-    Course* course2 = new Course(2, "Physics", 4);
-    Course* course3 = new Course(3, "Chemistry", 3);
+    Course *course2 = new Course(2, "Physics", 4);
+    Course *course3 = new Course(3, "Chemistry", 3);
     courseHashTable.insert_hash(course2->id, course2);
     courseHashTable.insert_hash(course3->id, course3);
     cout << "Inserted courses: " << course2->name << ", " << course3->name << endl;
 
     // Edge Case 3: Inserting multiple courses with colliding keys (same hash index)
-    Course* course4 = new Course(12, "Biology", 3); // 12 % 10 == 2
+    Course *course4 = new Course(12, "Biology", 3); // 12 % 10 == 2
     courseHashTable.insert_hash(course4->id, course4);
     cout << "Inserted course with collision: " << course4->name << endl;
 
     // Edge Case 4: Searching for a course that exists
-    Course* searchResult = courseHashTable.searchWithHashing(12);
-    if (searchResult) {
+    Course *searchResult = courseHashTable.searchWithHashing(12);
+    if (searchResult)
+    {
         cout << "Found course: " << searchResult->name << endl;
-    } else {
+    }
+    else
+    {
         cout << "Course not found." << endl;
     }
 
     // Edge Case 5: Searching for a course that does not exist
     searchResult = courseHashTable.searchWithHashing(10);
-    if (searchResult) {
+    if (searchResult)
+    {
         cout << "Found course: " << searchResult->name << endl;
-    } else {
+    }
+    else
+    {
         cout << "Course not found." << endl;
     }
 
     // Edge Case 6: Inserting a course with a duplicate key
-    Course* course5 = new Course(2, "Advanced Physics", 5);
+    Course *course5 = new Course(2, "Advanced Physics", 5);
     courseHashTable.insert_hash(course5->id, course5);
     cout << "Inserted course with duplicate key: " << course5->name << endl;
     searchResult = courseHashTable.searchWithHashing(2);
-    if (searchResult) {
+    if (searchResult)
+    {
         cout << "Found course after duplicate insert: " << searchResult->name << endl;
-    } else {
+    }
+    else
+    {
         cout << "Course not found after duplicate insert." << endl;
     }
 
     // Edge Case 7: Handling a large number of insertions to test performance and collisions
-    for (int i = 100; i < 110; ++i) {
-        Course* course = new Course(i, "Course " + to_string(i), 3);
+    for (int i = 100; i < 110; ++i)
+    {
+        Course *course = new Course(i, "Course " + to_string(i), 3);
         courseHashTable.insert_hash(course->id, course);
     }
-    for (int i = 100; i < 110; ++i) {
+    for (int i = 100; i < 110; ++i)
+    {
         searchResult = courseHashTable.searchWithHashing(i);
-        if (searchResult) {
+        if (searchResult)
+        {
             cout << "Found course: " << searchResult->name << endl;
-        } else {
+        }
+        else
+        {
             cout << "Course not found: " << i << endl;
         }
     }
@@ -593,14 +628,16 @@ void hash_table_test() {
     delete course3;
     delete course4;
     delete course5;
-    for (int i = 100; i < 110; ++i) {
-        Course* course = courseHashTable.searchWithHashing(i);
+    for (int i = 100; i < 110; ++i)
+    {
+        Course *course = courseHashTable.searchWithHashing(i);
         delete course;
     }
 }
 
-void test_case(){
-        // Student Records Test
+void test_case()
+{
+    // Student Records Test
     StudentRecords studentRecords;
     studentRecords.add(7, "Alice Johnson", "alice@example.com");
     studentRecords.add(5, "Bob Smith", "bob@example.com");
@@ -670,9 +707,10 @@ void test_case(){
     delete testCourse;
 }
 
-int main() {
-    //hash_table_test();
-    //test_sort_student();
-    //test_case();
+int main()
+{
+    // hash_table_test();
+    // test_sort_student();
+    // test_case();
     return 0;
 }
