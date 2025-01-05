@@ -210,6 +210,49 @@ public:
         return head;
     }
 };
+struct stackCourseRegistration
+{
+    string Coursename;
+    int Studentid;
+    stackCourseRegistration *next;
+    stackCourseRegistration(string Courseid, int Studentid) : Coursename(Courseid), Studentid(Studentid), next(nullptr) {}
+};
+class stackcourses
+{
+
+private:
+    stackCourseRegistration *top;
+
+public:
+    stackcourses()
+    {
+        top = nullptr;
+    }
+    void push(string Coursename, int Studentid)
+    {
+        stackCourseRegistration *newnode = new stackCourseRegistration(Coursename, Studentid);
+        newnode->next = top;
+        top = newnode;
+    }
+    void pop()
+    {
+        if (top == nullptr)
+        {
+            cout << "Stack is empty!";
+            return;
+        }
+        else
+        {
+            stackCourseRegistration *temp = top;
+            top = top->next;
+            delete temp;
+        }
+    }
+    bool isEmpty()
+    {
+        return top == nullptr;
+    }
+};
 
 struct WaitlistNode
 {
@@ -482,7 +525,7 @@ void linked_list_swap(Student *node1, Student *node2)
     node2->email = temp_email;
 }
 
-Student* sort_student(Student *head)
+Student *sort_student(Student *head)
 {
     if (head == NULL)
     {
@@ -515,8 +558,10 @@ Student* sort_student(Student *head)
     return head;
 }
 
-void in_order_bts_to_array(Course* root, vector<Course*>& nodes){
-    if(root == NULL){
+void in_order_bts_to_array(Course *root, vector<Course *> &nodes)
+{
+    if (root == NULL)
+    {
         return;
     }
     in_order_bts_to_array(root->left, nodes);
@@ -524,27 +569,31 @@ void in_order_bts_to_array(Course* root, vector<Course*>& nodes){
     in_order_bts_to_array(root->right, nodes);
 }
 
-Course* array_to_bts(vector<Course*>& nodes,int start, int end){
-    if(nodes.size() == 0){
+Course *array_to_bts(vector<Course *> &nodes, int start, int end)
+{
+    if (nodes.size() == 0)
+    {
         return NULL;
     }
-    if(start > end){
+    if (start > end)
+    {
         return NULL;
     }
 
     int mid = (start + end) / 2;
-    Course* new_root = nodes[mid];
-    
-    new_root->left = array_to_bts(nodes, start, mid -1);
-    new_root->right = array_to_bts(nodes, mid+1, end);
+    Course *new_root = nodes[mid];
+
+    new_root->left = array_to_bts(nodes, start, mid - 1);
+    new_root->right = array_to_bts(nodes, mid + 1, end);
 
     return new_root;
 }
 
-Course* sort_courses_bts(Course* root){
-    vector<Course*> bts_nodes;
+Course *sort_courses_bts(Course *root)
+{
+    vector<Course *> bts_nodes;
     in_order_bts_to_array(root, bts_nodes);
-    Course* new_root = array_to_bts(bts_nodes, 0, bts_nodes.size() - 1);
+    Course *new_root = array_to_bts(bts_nodes, 0, bts_nodes.size() - 1);
     return new_root;
 }
 
@@ -689,104 +738,3 @@ public:
         return 1;
     }
 };
-
-class university_main{
-    private:
-        Course_enrollment_History course_enrollment_DLL;
-        StudentRecords student_records;
-        Course_Waitlist course_waitlist;
-        hash_table hash;
-        bst courses_bst;
-        //course_registration_stack
-    public:
-        //single linked list
-
-        //bst
-        void courses_bst_add(int idcourse, string namecourse, int credithours, string teachers){
-            Course* new_course = courses_bst.addcourse(idcourse ,namecourse, credithours,teachers);
-            if(new_course){
-                hash.insert_hash(new_course);
-            }
-        }
-
-        void courses_bst_drop(int id){
-            int course_drop = courses_bst.dropCourse(id);
-            if(course_drop == 1){
-                hash.remove_from_hash(id);
-            }
-        }
-
-        //DLL
-        void course_add_DLL(string course_name){
-            course_enrollment_DLL.add_course(course_name);
-        }
-
-        void view_enrollment_History_DLL(){
-            course_enrollment_DLL.view_enrollment_History();
-        }
-
-        //stack
-
-        //queue
-        void Course_Waitlist_enqueue(string student_name){
-            course_waitlist.enqueue(student_name);
-        }
-
-        void Course_Waitlist_dequeue(){
-            course_waitlist.dequeue();
-        }
-
-        //search
-        void search_student(int student_id){
-            Student *student = linear_search_student(student_records.get_head(), student_id);
-            if (student == NULL){
-                cout << "Student Not Found!" << endl;
-            }
-            else{
-                cout << "Student Found, Name: " << student->name << endl;
-            }
-        }
-
-        void search_course(int course_id){
-            Course *course = binary_search_course(courses_bst.root, course_id);
-
-            if (course != NULL){
-                cout << "Course: " << course->name << endl;
-            }
-            else{
-                cout << "Course Not Found!" << endl;
-            }
-        }
-
-        //sort
-        void sort_linked_list_by_id(){
-            Student *student_sort = sort_student(student_records.get_head());
-            student_records.display();
-        }
-
-        void balance_courses_bts(){
-            Course* sorted_courses = sort_courses_bts(courses_bst.root);
-            courses_bst.display(courses_bst.root);
-        }
-
-        //hash function
-        void searchWithHashing(int id){
-            Course* Course = hash.searchWithHashing(id);
-            if(Course){
-                cout<<"Found"<<endl;
-            }
-            else{
-                cout<<"Not Found"<<endl;
-            }
-        }
-};
-
-// int main()
-// {
-//     // hash_table_test();
-//     // test_sort_student();
-//     // test_case();
-//     // test_bst();
-//     Display_Menu();
-//     return 0;
-// }
