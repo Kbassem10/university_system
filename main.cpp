@@ -4,6 +4,46 @@
 #include <vector>
 
 using namespace std;
+void clearScreen()
+{
+#ifdef _WIN32
+    system("CLS");
+#else
+    system("clear");
+#endif
+}
+void pause()
+{
+    cout << "Press Enter to continue...";
+    cin.get();
+}
+void Display_Menu()
+{
+    int choice;
+    cout << "\t\t\t\t Welcome to Hellhound University\t\t\t\t" << endl;
+    pause();
+    do
+    {
+        clearScreen();
+        cout << "\nMenu: \n";
+        // print menu
+        while (true)
+        {
+            string input;
+            getline(cin, input);
+            try
+            {
+                choice = stoi(input);
+                break;
+            }
+            catch (...)
+            {
+                cout << "Invalid input! Please enter a valid number: ";
+            }
+        }
+        // switch
+    } while (choice != 0);
+}
 
 struct Course_enrollment_Node
 {
@@ -252,35 +292,9 @@ struct Course
 
 class bst // Fahmy yeshel w yktbha Raqam 2
 {
-private:
+public:
     Course *root;
-    Course *findmin(Course *node)
-    { // 3ashan lma agy a3ml delete f drop course func.
-        while (node && node->left != nullptr)
-        {
-            node = node->left;
-        }
-        return node;
-    }
-
-    void displayHelper(Course* node) {
-        if (!node) return;
-        displayHelper(node->left);
-        cout << "ID: " << node->id << ", Name: " << node->name << ", Credits: " << node->credits << ", Instructor: " << node->CourseInstructor << endl;
-        displayHelper(node->right);
-    }
-
-public:
-    Course* get_root() const
-    {
-        return root;
-    }
-
-public:
-    bst()
-    {
-        root = nullptr;
-    }
+    bst() { root = nullptr; }
     void addcourse(int idcourse, string namecourse, int creditscourse, string teachers)
     {
         Course *newcourse = new Course(idcourse, namecourse, creditscourse, teachers);
@@ -320,72 +334,88 @@ public:
     }
     void dropCourse(int id)
     {
-        Course *temp=root;
-        Course *parent=nullptr;
+        Course *temp = root;
+        Course *parent = nullptr;
 
-    // With one or no children
-    while(temp!=nullptr && temp->id!= id){
-        parent=temp;
-        if(id<temp->id){
-            temp=temp->left;
-
-        }
-        else{
-            temp=temp->right;
-        }
-    }
-    if(temp==nullptr){
-        cout<<"course does not exist";
-        return;
-    }
-    if(temp->left== nullptr || temp->right== nullptr){
-        Course *sorryNadeem;
-        if(temp->left != nullptr){
-            sorryNadeem= temp->left;
-        }
-        else{
-            sorryNadeem= temp->right;
-        }
-        if(parent==nullptr){
-            root=sorryNadeem;
-        }
-        else{
-            if (temp==parent->left){
-                parent->left=sorryNadeem;
+        // With one or no children
+        while (temp != nullptr && temp->id != id)
+        {
+            parent = temp;
+            if (id < temp->id)
+            {
+                temp = temp->left;
             }
-            else{
-                parent-> right=sorryNadeem;
+            else
+            {
+                temp = temp->right;
             }
         }
-        delete temp;
-    }
-    else{// with 2 children
-        Course *next= temp->right;
-        Course *nextparent= temp;
-        while(next->left!=nullptr){
-            nextparent=next;
-            next=next->left;
+        if (temp == nullptr)
+        {
+            cout << "course does not exist";
+            return;
         }
-        temp->id=next->id;
-        temp->name=next->name;
-        temp->credits=next->credits;
-        temp->CourseInstructor=next->CourseInstructor;
-
-        if(nextparent->left==next){
-            nextparent->left=next->right;
+        if (temp->left == nullptr || temp->right == nullptr)
+        {
+            Course *sorryNadeem;
+            if (temp->left != nullptr)
+            {
+                sorryNadeem = temp->left;
+            }
+            else
+            {
+                sorryNadeem = temp->right;
+            }
+            if (parent == nullptr)
+            {
+                root = sorryNadeem;
+            }
+            else
+            {
+                if (temp == parent->left)
+                {
+                    parent->left = sorryNadeem;
+                }
+                else
+                {
+                    parent->right = sorryNadeem;
+                }
+            }
+            delete temp;
         }
-        else{
-            nextparent->right=next->right;
+        else
+        { // with 2 children
+            Course *next = temp->right;
+            Course *nextparent = temp;
+            while (next->left != nullptr)
+            {
+                nextparent = next;
+                next = next->left;
+            }
+            temp->id = next->id;
+            temp->name = next->name;
+            temp->credits = next->credits;
+            temp->CourseInstructor = next->CourseInstructor;
+
+            if (nextparent->left == next)
+            {
+                nextparent->left = next->right;
+            }
+            else
+            {
+                nextparent->right = next->right;
+            }
+            delete next;
         }
-        delete next;
     }
+    void display(Course *node)
+    {
+        if (node == nullptr)
+            return;
+        display(node->left);
+        cout << "ID: " << node->id << ", Name: " << node->name << ", Credits: " << node->credits << ", Instructor: " << node->CourseInstructor << endl;
+        display(node->right);
     }
-    void display() {
-        // 7d y3mlha 34an m4 3arf!!
-        displayHelper(root);
-
-    }
-
 };
 Student *linear_search_student(Student *head, int student_id)
 {
@@ -482,29 +512,35 @@ Student *sort_student(Student *head)
     return head;
 }
 
-class hash_table{
+class hash_table
+{
 private:
-    struct hash_node{
+    struct hash_node
+    {
         int key;
-        Course* value;
-        hash_node* next_node;
+        Course *value;
+        hash_node *next_node;
     };
-    hash_node** table;
+    hash_node **table;
     int table_size;
     int num_elements;
 
-    void rehash() {
+    void rehash()
+    {
         int old_table_size = table_size;
         table_size *= 2;
-        hash_node** new_table = new hash_node*[table_size];
-        for (int i = 0; i < table_size; ++i) {
+        hash_node **new_table = new hash_node *[table_size];
+        for (int i = 0; i < table_size; ++i)
+        {
             new_table[i] = NULL;
         }
 
-        for (int i = 0; i < old_table_size; ++i) {
-            hash_node* current = table[i];
-            while (current != NULL) {
-                hash_node* next = current->next_node;
+        for (int i = 0; i < old_table_size; ++i)
+        {
+            hash_node *current = table[i];
+            while (current != NULL)
+            {
+                hash_node *next = current->next_node;
                 int new_index = hashFunction(current->key);
                 current->next_node = new_table[new_index];
                 new_table[new_index] = current;
@@ -517,50 +553,61 @@ private:
     }
 
 public:
-    hash_table() {
+    hash_table()
+    {
         table_size = 10;
         num_elements = 0;
-        table = new hash_node*[table_size];
-        for (int i = 0; i < table_size; ++i) {
+        table = new hash_node *[table_size];
+        for (int i = 0; i < table_size; ++i)
+        {
             table[i] = NULL;
         }
     }
 
-    //hashing function
-    int hashFunction(int key) {
+    // hashing function
+    int hashFunction(int key)
+    {
         return key % table_size;
     }
 
-    void insert_hash(Course* value){
+    void insert_hash(Course *value)
+    {
         int key = value->id;
 
-        if(num_elements > table_size){
+        if (num_elements > table_size)
+        {
             rehash();
         }
 
         int index = hashFunction(key);
-        hash_node* new_node = new hash_node;
+        hash_node *new_node = new hash_node;
         new_node->next_node = NULL;
         new_node->key = key;
         new_node->value = value;
-        if(table[index]){
-            hash_node* current = table[index];
-            while(current->next_node != NULL){
+        if (table[index])
+        {
+            hash_node *current = table[index];
+            while (current->next_node != NULL)
+            {
                 current = current->next_node;
             }
             current->next_node = new_node;
         }
-        else{
+        else
+        {
             table[index] = new_node;
         }
         num_elements++;
     }
 
-    Course* searchWithHashing(int key){
+    Course *searchWithHashing(int key)
+    {
         int index = hashFunction(key);
-        hash_node* current = table[index];
-        while(current != NULL){
-            if(current->value->id == key){
+        hash_node *current = table[index];
+        while (current != NULL)
+        {
+            if (current->value->id == key)
+            {
                 return current->value;
             }
             current = current->next_node;
@@ -568,27 +615,33 @@ public:
         return NULL;
     }
 
-    int remove_from_hash(int key){
+    int remove_from_hash(int key)
+    {
         int index = hashFunction(key);
-        hash_node* current = table[index];
-        hash_node* prev = NULL;
+        hash_node *current = table[index];
+        hash_node *prev = NULL;
 
-        while(current != NULL){
-            if(current->value->id == key){
+        while (current != NULL)
+        {
+            if (current->value->id == key)
+            {
                 break;
             }
             prev = current;
             current = current->next_node;
         }
 
-        if(current == NULL){
+        if (current == NULL)
+        {
             return 0;
         }
 
-        if(prev == NULL){
+        if (prev == NULL)
+        {
             table[index] = current->next_node;
         }
-        else{
+        else
+        {
             prev->next_node = current->next_node;
         }
 
@@ -785,7 +838,7 @@ void test_case()
 
     // Search Test
     Student *student = linear_search_student(studentRecords.get_head(), 3);
-    Course *course = binary_search_course(courseRecords.get_root(), 4);
+    Course *course = binary_search_course(courseRecords.root, 4);
 
     if (student == NULL)
     {
@@ -834,7 +887,8 @@ void test_case()
     delete testCourse;
 }
 
-void test_bst() {
+void test_bst()
+{
     bst courseTree;
 
     // Test Case 1: Inserting nodes into the BST
@@ -846,59 +900,73 @@ void test_bst() {
     courseTree.addcourse(7, "Database Systems", 3, "Dr. Green");
     courseTree.addcourse(10, "Artificial Intelligence", 3, "Dr. Black");
     cout << "Inserted courses:" << endl;
-    courseTree.display();
+    courseTree.display(courseTree.root);
 
     // Test Case 2: Searching for nodes in the BST
-    Course* searchResult = courseTree.get_root();
-    while (searchResult != nullptr && searchResult->id != 4) {
-        if (4 < searchResult->id) {
+    Course *searchResult = courseTree.root;
+    while (searchResult != nullptr && searchResult->id != 4)
+    {
+        if (4 < searchResult->id)
+        {
             searchResult = searchResult->left;
-        } else {
+        }
+        else
+        {
             searchResult = searchResult->right;
         }
     }
-    if (searchResult) {
+    if (searchResult)
+    {
         cout << "Found course: " << searchResult->name << endl;
-    } else {
+    }
+    else
+    {
         cout << "Course not found." << endl;
     }
 
-    searchResult = courseTree.get_root();
-    while (searchResult != nullptr && searchResult->id != 6) {
-        if (6 < searchResult->id) {
+    searchResult = courseTree.root;
+    while (searchResult != nullptr && searchResult->id != 6)
+    {
+        if (6 < searchResult->id)
+        {
             searchResult = searchResult->left;
-        } else {
+        }
+        else
+        {
             searchResult = searchResult->right;
         }
     }
-    if (searchResult) {
+    if (searchResult)
+    {
         cout << "Found course: " << searchResult->name << endl;
-    } else {
+    }
+    else
+    {
         cout << "Course not found." << endl;
     }
 
     // Test Case 3: Removing nodes from the BST
     courseTree.dropCourse(3);
     cout << "Removed course with ID 3:" << endl;
-    courseTree.display();
+    courseTree.display(courseTree.root);
 
     courseTree.dropCourse(8);
     cout << "Removed course with ID 8:" << endl;
-    courseTree.display();
+    courseTree.display(courseTree.root);
 
     courseTree.dropCourse(5);
     cout << "Removed course with ID 5:" << endl;
-    courseTree.display();
+    courseTree.display(courseTree.root);
 
     // Additional Test Case: Removing the root node
     courseTree.dropCourse(1);
     cout << "Removed course with ID 1 (root):" << endl;
-    courseTree.display();
+    courseTree.display(courseTree.root);
 
     // Additional Test Case: Removing a non-existent node
     courseTree.dropCourse(999);
     cout << "Attempted to remove non-existent course with ID 999:" << endl;
-    courseTree.display();
+    courseTree.display(courseTree.root);
 }
 
 int main()
@@ -906,6 +974,7 @@ int main()
     // hash_table_test();
     // test_sort_student();
     // test_case();
-    test_bst();
+    // test_bst();
+    Display_Menu();
     return 0;
 }
