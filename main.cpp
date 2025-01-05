@@ -284,6 +284,7 @@ public:
         cout << "Added to waitlist: " << studentName << endl;
     };
 
+
     void dequeue()
     {
         if (!front)
@@ -332,19 +333,18 @@ struct Course
     Course(int id, const string &name, int credits, const string &CourseInstructor)
         : id(id), name(name), credits(credits), left(nullptr), right(nullptr), CourseInstructor(CourseInstructor) {}
 };
-
 class bst // Fahmy yeshel w yktbha Raqam 2
 {
 public:
     Course *root;
     bst() { root = nullptr; }
-    void addcourse(int idcourse, string namecourse, int creditscourse, string teachers)
+    Course* addcourse(int idcourse, string namecourse, int creditscourse, string teachers)
     {
         Course *newcourse = new Course(idcourse, namecourse, creditscourse, teachers);
         if (root == nullptr)
         {
             root = newcourse;
-            return;
+            return newcourse;
         }
         Course *temp = root;
         Course *parent = nullptr; //-------------> parent variable 3ashan lma temp yeb2a b null (5alas position is found) the parent variable bya5od reference elly kan a5r 7aga 3ndha
@@ -363,19 +363,21 @@ public:
             {
                 cout << " this course is already exist";
                 delete newcourse;
-                return;
+                return NULL;
             }
         }
         if (idcourse < parent->id)
         {
             parent->left = newcourse;
+            return newcourse;
         }
         else
         {
             parent->right = newcourse;
+            return newcourse;
         }
     }
-    void dropCourse(int id)
+    int dropCourse(int id)
     {
         Course *temp = root;
         Course *parent = nullptr;
@@ -396,7 +398,7 @@ public:
         if (temp == nullptr)
         {
             cout << "course does not exist";
-            return;
+            return 0;
         }
         if (temp->left == nullptr || temp->right == nullptr)
         {
@@ -425,6 +427,7 @@ public:
                 }
             }
             delete temp;
+            return 1;
         }
         else
         { // with 2 children
@@ -449,6 +452,7 @@ public:
                 nextparent->right = next->right;
             }
             delete next;
+            return 1;
         }
     }
     void display(Course *node)
@@ -478,8 +482,7 @@ Student *linear_search_student(Student *head, int student_id)
     return NULL;
 }
 
-Course *binary_search_course(Course *root, int course_id)
-{
+Course *binary_search_course(Course *root, int course_id){
     Course *current = root;
     while (current != NULL)
     {
@@ -493,7 +496,7 @@ Course *binary_search_course(Course *root, int course_id)
             current = current->right;
         }
 
-        if (course_id < current->id)
+        else if (course_id < current->id)
         {
             current = current->left;
         }
@@ -684,6 +687,9 @@ public:
 
     Course *searchWithHashing(int key)
     {
+        if(key < 0){
+            return NULL;
+        }
         int index = hashFunction(key);
         hash_node *current = table[index];
         while (current != NULL)
@@ -732,12 +738,3 @@ public:
         return 1;
     }
 };
-
-int main()
-{
-    // hash_table_test();
-    // test_sort_student();
-    // test_case();
-    // test_bst();
-    return 0;
-}
