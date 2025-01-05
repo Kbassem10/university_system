@@ -304,8 +304,11 @@ public:
     {
         Student *temp = head;
         cout << "Student's Record:\n";
-        while (temp->id != id)
+        while (temp)
         {
+            if(temp->id == id){
+                break;
+            }
             temp = temp->next;
         }
         if(temp == NULL){

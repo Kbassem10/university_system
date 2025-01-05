@@ -1,83 +1,110 @@
-//!!!!!!! TO RUN THE TEST YOU HAVE TO COMMENT THE MAIN IN THE main.cpp !!!!!!!!!!!!!
+// FILE: test_main.cpp
 
-#include <iostream>
 #include "main.cpp"
+#include <cassert>
+#include <iostream>
 
-void test_university_main() {
-    university_main uni;
-
-    // Test adding courses to BST and hash table
-    uni.courses_bst_add(101, "Math", 3, "Dr. Smith");
-    uni.courses_bst_add(102, "Physics", 4, "Dr. Johnson");
-    uni.courses_bst_add(103, "Chemistry", 3, "Dr. Lee");
-
-    // Test searching for courses
-    uni.search_course(101); // Should print "Course: Math"
-    uni.search_course(104); // Should print "Course Not Found!"
-
-    // Test adding students
-    Student student1(1, "Alice", "alice@example.com");
-    Student student2(2, "Bob", "bob@example.com");
-    Student student3(3, "Charlie", "charlie@example.com");
-
-    // Add students to student records
-    // uni.student_records.add_student(&student1);
-    // uni.student_records.add_student(&student2);
-    // uni.student_records.add_student(&student3);
-
-    // Test searching for students
-    uni.search_student(1); // Should print "Student Found, Name: Alice"
-    uni.search_student(3); // Should print "Student Found, Name: Charlie"
-    uni.search_student(4); // Should print "Student Not Found!"
-
-    // Test adding courses to student's enrollment history
-    uni.course_add_DLL(101, 1); // Alice enrolls in Math
-    uni.course_add_DLL(102, 2); // Bob enrolls in Physics
-    uni.course_add_DLL(103, 3); // Charlie enrolls in Chemistry
-
-    // Test viewing enrollment history
-    uni.view_enrollment_History_DLL(); // Should print enrollment history
-
-    // Test dropping courses from BST and hash table
-    uni.courses_bst_drop(102); // Drop Physics
-    uni.search_course(102); // Should print "Course Not Found!"
-
-    // Test dropping a non-existent course
-    uni.courses_bst_drop(104); // Should print "Course Not Found!"
-
-    // Test sorting linked list by student ID
-    uni.sort_linked_list_by_id(); // Should print sorted student records
-
-    // Test balancing courses BST
-    uni.balance_courses_bts(); // Should print balanced BST
-
-    // Test searching with hashing
-    uni.searchWithHashing(101); // Should print "Found"
-    uni.searchWithHashing(104); // Should print "Not Found"
-
-    // Edge case: Adding a course with the same ID
-    uni.courses_bst_add(101, "Advanced Math", 4, "Dr. Brown"); // Should handle duplicate ID
-
-    // Edge case: Adding a student with the same ID
-    Student student4(1, "Duplicate Alice", "duplicate_alice@example.com");
-    // uni.student_records.add_student(&student4); // Should handle duplicate ID
-
-    // Edge case: Enrolling a student in a course that is full
-    for (int i = 0; i < 30; ++i) {
-        Student* temp_student = new Student(100 + i, "Temp Student " + to_string(i), "temp" + to_string(i) + "@example.com");
-        // uni.student_records.add_student(temp_student);
-        uni.course_add_DLL(101, 100 + i); // Enroll in Math
+class university_main_test {
+public:
+    void run_tests() {
+        test_add_student();
+        test_delete_student();
+        test_display_student_details();
+        test_courses_bst_add();
+        test_courses_bst_drop();
+        test_course_add_DLL();
+        test_view_enrollment_History_DLL();
+        test_search_student();
+        test_search_course();
+        test_sort_linked_list_by_id();
+        test_balance_courses_bts();
+        test_searchWithHashing();
     }
-    uni.course_add_DLL(101, 3); // Charlie tries to enroll in Math, should be added to waitlist
 
-    // Edge case: Dropping a course and enrolling from waitlist
-    uni.courses_bst_drop(101); // Drop Math
-    uni.search_course(101); // Should print "Course Not Found!"
+private:
+    void test_add_student() {
+        university_main uni;
+        uni.add_student(1, "John Doe", "john@example.com", "1234567890", "123 Main St", "password");
+        // Assuming display_student_details prints student details
+        uni.display_student_details(1);
+    }
 
-    std::cout << "All test cases passed for university_main!" << std::endl;
-}
+    void test_delete_student() {
+        university_main uni;
+        uni.add_student(1, "John Doe", "john@example.com", "1234567890", "123 Main St", "password");
+        uni.delete_student(1);
+        uni.display_student_details(1); // Should indicate student not found
+    }
+
+    void test_display_student_details() {
+        university_main uni;
+        uni.add_student(1, "John Doe", "john@example.com", "1234567890", "123 Main St", "password");
+        uni.display_student_details(1); // Should display student details
+    }
+
+    void test_courses_bst_add() {
+        university_main uni;
+        uni.courses_bst_add(101, "Math", 3, "Prof. Smith");
+        uni.search_course(101); // Should display course details
+    }
+
+    void test_courses_bst_drop() {
+        university_main uni;
+        uni.courses_bst_add(101, "Math", 3, "Prof. Smith");
+        uni.courses_bst_drop(101);
+        uni.search_course(101); // Should indicate course not found
+    }
+
+    void test_course_add_DLL() {
+        university_main uni;
+        uni.add_student(1, "John Doe", "john@example.com", "1234567890", "123 Main St", "password");
+        uni.courses_bst_add(101, "Math", 3, "Prof. Smith");
+        uni.course_add_DLL(101, 1); // Should add course to student's enrollment history
+    }
+
+    void test_view_enrollment_History_DLL() {
+        university_main uni;
+        uni.view_enrollment_History_DLL(); // Should display enrollment history
+    }
+
+    void test_search_student() {
+        university_main uni;
+        uni.add_student(1, "John Doe", "john@example.com", "1234567890", "123 Main St", "password");
+        uni.search_student(1); // Should indicate student found
+        uni.search_student(2); // Should indicate student not found
+    }
+
+    void test_search_course() {
+        university_main uni;
+        uni.courses_bst_add(101, "Math", 3, "Prof. Smith");
+        uni.search_course(101); // Should indicate course found
+        uni.search_course(102); // Should indicate course not found
+    }
+
+    void test_sort_linked_list_by_id() {
+        university_main uni;
+        uni.add_student(2, "Jane Doe", "jane@example.com", "0987654321", "456 Main St", "password");
+        uni.add_student(1, "John Doe", "john@example.com", "1234567890", "123 Main St", "password");
+        uni.sort_linked_list_by_id(); // Should sort students by ID and display sorted list
+    }
+
+    void test_balance_courses_bts() {
+        university_main uni;
+        uni.courses_bst_add(101, "Math", 3, "Prof. Smith");
+        uni.courses_bst_add(102, "Science", 4, "Prof. Johnson");
+        uni.balance_courses_bts(); // Should balance BST and display courses
+    }
+
+    void test_searchWithHashing() {
+        university_main uni;
+        uni.courses_bst_add(101, "Math", 3, "Prof. Smith");
+        uni.searchWithHashing(101); // Should indicate course found
+        uni.searchWithHashing(102); // Should indicate course not found
+    }
+};
 
 int main() {
-    test_university_main();
+    university_main_test tester;
+    tester.run_tests();
     return 0;
 }
