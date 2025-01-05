@@ -479,7 +479,7 @@ void linked_list_swap(Student *node1, Student *node2)
     node2->email = temp_email;
 }
 
-Student *sort_student(Student *head)
+Student* sort_student(Student *head)
 {
     if (head == NULL)
     {
@@ -510,6 +510,39 @@ Student *sort_student(Student *head)
         current = current->next;
     }
     return head;
+}
+
+void in_order_bts_to_array(Course* root, vector<Course*>& nodes){
+    if(root == NULL){
+        return;
+    }
+    in_order_bts_to_array(root->left, nodes);
+    nodes.push_back(root);
+    in_order_bts_to_array(root->right, nodes);
+}
+
+Course* array_to_bts(vector<Course*>& nodes,int start, int end){
+    if(nodes.size() == 0){
+        return NULL;
+    }
+    if(start > end){
+        return NULL;
+    }
+
+    int mid = (start + end) / 2;
+    Course* new_root = nodes[mid];
+    
+    new_root->left = array_to_bts(nodes, start, mid -1);
+    new_root->right = array_to_bts(nodes, mid+1, end);
+
+    return new_root;
+}
+
+Course* sort_courses_bts(Course* root){
+    vector<Course*> bts_nodes;
+    in_order_bts_to_array(root, bts_nodes);
+    Course* new_root = array_to_bts(bts_nodes, 0, bts_nodes.size() - 1);
+    return new_root;
 }
 
 class hash_table
