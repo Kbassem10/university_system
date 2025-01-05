@@ -241,6 +241,7 @@ public:
         cout << "Added to waitlist: " << studentName << endl;
     };
 
+
     void dequeue()
     {
         if (!front)
@@ -289,19 +290,18 @@ struct Course
     Course(int id, const string &name, int credits, const string &CourseInstructor)
         : id(id), name(name), credits(credits), left(nullptr), right(nullptr), CourseInstructor(CourseInstructor) {}
 };
-
 class bst // Fahmy yeshel w yktbha Raqam 2
 {
 public:
     Course *root;
     bst() { root = nullptr; }
-    void addcourse(int idcourse, string namecourse, int creditscourse, string teachers)
+    Course* addcourse(int idcourse, string namecourse, int creditscourse, string teachers)
     {
         Course *newcourse = new Course(idcourse, namecourse, creditscourse, teachers);
         if (root == nullptr)
         {
             root = newcourse;
-            return;
+            return newcourse;
         }
         Course *temp = root;
         Course *parent = nullptr; //-------------> parent variable 3ashan lma temp yeb2a b null (5alas position is found) the parent variable bya5od reference elly kan a5r 7aga 3ndha
@@ -320,19 +320,21 @@ public:
             {
                 cout << " this course is already exist";
                 delete newcourse;
-                return;
+                return NULL;
             }
         }
         if (idcourse < parent->id)
         {
             parent->left = newcourse;
+            return newcourse;
         }
         else
         {
             parent->right = newcourse;
+            return newcourse;
         }
     }
-    void dropCourse(int id)
+    int dropCourse(int id)
     {
         Course *temp = root;
         Course *parent = nullptr;
@@ -353,7 +355,7 @@ public:
         if (temp == nullptr)
         {
             cout << "course does not exist";
-            return;
+            return 0;
         }
         if (temp->left == nullptr || temp->right == nullptr)
         {
@@ -382,6 +384,7 @@ public:
                 }
             }
             delete temp;
+            return 1;
         }
         else
         { // with 2 children
@@ -406,6 +409,7 @@ public:
                 nextparent->right = next->right;
             }
             delete next;
+            return 1;
         }
     }
     void display(Course *node)
@@ -435,8 +439,7 @@ Student *linear_search_student(Student *head, int student_id)
     return NULL;
 }
 
-Course *binary_search_course(Course *root, int course_id)
-{
+Course *binary_search_course(Course *root, int course_id){
     Course *current = root;
     while (current != NULL)
     {
@@ -450,7 +453,7 @@ Course *binary_search_course(Course *root, int course_id)
             current = current->right;
         }
 
-        if (course_id < current->id)
+        else if (course_id < current->id)
         {
             current = current->left;
         }
@@ -635,6 +638,9 @@ public:
 
     Course *searchWithHashing(int key)
     {
+        if(key < 0){
+            return NULL;
+        }
         int index = hashFunction(key);
         hash_node *current = table[index];
         while (current != NULL)
@@ -684,12 +690,103 @@ public:
     }
 };
 
-int main()
-{
-    // hash_table_test();
-    // test_sort_student();
-    // test_case();
-    // test_bst();
-    Display_Menu();
-    return 0;
-}
+class university_main{
+    private:
+        Course_enrollment_History course_enrollment_DLL;
+        StudentRecords student_records;
+        Course_Waitlist course_waitlist;
+        hash_table hash;
+        bst courses_bst;
+        //course_registration_stack
+    public:
+        //single linked list
+
+        //bst
+        void courses_bst_add(int idcourse, string namecourse, int credithours, string teachers){
+            Course* new_course = courses_bst.addcourse(idcourse ,namecourse, credithours,teachers);
+            if(new_course){
+                hash.insert_hash(new_course);
+            }
+        }
+
+        void courses_bst_drop(int id){
+            int course_drop = courses_bst.dropCourse(id);
+            if(course_drop == 1){
+                hash.remove_from_hash(id);
+            }
+        }
+
+        //DLL
+        void course_add_DLL(string course_name){
+            course_enrollment_DLL.add_course(course_name);
+        }
+
+        void view_enrollment_History_DLL(){
+            course_enrollment_DLL.view_enrollment_History();
+        }
+
+        //stack
+
+        //queue
+        void Course_Waitlist_enqueue(string student_name){
+            course_waitlist.enqueue(student_name);
+        }
+
+        void Course_Waitlist_dequeue(){
+            course_waitlist.dequeue();
+        }
+
+        //search
+        void search_student(int student_id){
+            Student *student = linear_search_student(student_records.get_head(), student_id);
+            if (student == NULL){
+                cout << "Student Not Found!" << endl;
+            }
+            else{
+                cout << "Student Found, Name: " << student->name << endl;
+            }
+        }
+
+        void search_course(int course_id){
+            Course *course = binary_search_course(courses_bst.root, course_id);
+
+            if (course != NULL){
+                cout << "Course: " << course->name << endl;
+            }
+            else{
+                cout << "Course Not Found!" << endl;
+            }
+        }
+
+        //sort
+        void sort_linked_list_by_id(){
+            Student *student_sort = sort_student(student_records.get_head());
+            student_records.display();
+        }
+
+        void balance_courses_bts(){
+            Course* sorted_courses = sort_courses_bts(courses_bst.root);
+            courses_bst.display(courses_bst.root);
+        }
+
+        //hash function
+        void searchWithHashing(int id){
+            Course* Course = hash.searchWithHashing(id);
+            if(Course){
+                cout<<"Found"<<endl;
+            }
+            else{
+                cout<<"Not Found"<<endl;
+            }
+        }
+};
+
+// int main()
+// {
+//     // hash_table_test();
+//     // test_sort_student();
+//     // test_case();
+//     // test_bst();
+//     Display_Menu();
+//     return 0;
+// }

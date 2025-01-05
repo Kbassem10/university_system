@@ -319,6 +319,87 @@ void test_bst()
     courseTree.display(courseTree.root);
 }
 
+void test_university_main() {
+    university_main uni;
+
+    // Testing courses_bst_add
+    cout << "Testing courses_bst_add...\n";
+    uni.courses_bst_add(101, "Math 101", 3, "Dr. Smith"); // Valid case
+    uni.courses_bst_add(102, "Physics 101", 4, "Dr. Brown"); // Valid case
+    uni.courses_bst_add(101, "Math 101 Duplicate", 3, "Dr. Smith"); // Duplicate ID
+    uni.courses_bst_add(103, "", 4, "Dr. Johnson"); // Empty course name
+    uni.courses_bst_add(104, "Chemistry 101", -1, "Dr. Lee"); // Negative credit hours
+    uni.courses_bst_add(105, "Biology 101", 3, ""); // Empty instructor name
+
+    // Testing courses_bst_drop
+    cout << "Testing courses_bst_drop...\n";
+    uni.courses_bst_drop(101); // Valid case
+    uni.courses_bst_drop(999); // Non-existing ID
+    uni.courses_bst_drop(-1);  // Invalid ID
+
+    // Testing course_enrollment_DLL
+    cout << "Testing course_enrollment_DLL...\n";
+    uni.course_add_DLL("Math 101"); // Valid case
+    uni.course_add_DLL(""); // Empty course name
+    uni.course_add_DLL("Physics 101"); // Another valid case
+
+    // Testing view_enrollment_History_DLL
+    cout << "Testing view_enrollment_History_DLL...\n";
+    uni.view_enrollment_History_DLL();
+
+    // Testing Course_Waitlist
+    cout << "Testing Course_Waitlist...\n";
+    uni.Course_Waitlist_enqueue("John Doe"); // Valid case
+    uni.Course_Waitlist_enqueue("Jane Smith"); // Valid case
+    uni.Course_Waitlist_enqueue(""); // Empty student name
+    uni.Course_Waitlist_dequeue(); // Dequeue John Doe
+    uni.Course_Waitlist_dequeue(); // Dequeue Jane Smith
+    uni.Course_Waitlist_dequeue(); // Attempt to dequeue from empty waitlist
+
+    // Testing search_student
+    cout << "Testing search_student...\n";
+    uni.search_student(12345); // Non-existing student
+    uni.search_student(-1); // Invalid student ID
+
+    // Testing search_course
+    cout << "Testing search_course...\n";
+    uni.search_course(102); // Existing course
+    uni.search_course(999); // Non-existing course
+    uni.search_course(-1);  // Invalid course ID
+
+    // Testing sort_linked_list_by_id
+    cout << "Testing sort_linked_list_by_id...\n";
+    uni.sort_linked_list_by_id();
+
+    // Testing balance_courses_bts
+    cout << "Testing balance_courses_bts...\n";
+    uni.balance_courses_bts();
+
+// Hash Table Validation: Test Edge Cases
+
+    // Case 1: Test collisions (Assuming hash table uses a simple modulus-based hash function)
+    // We will add two courses with the same hash value (e.g., same ID % size of the hash table)
+    // Let's assume a simple size for the hash table, e.g., 10.
+    cout << "\nTesting Hash Table Collision...\n";
+    uni.courses_bst_add(10, "Course 10", 3, "Instructor A"); // Assuming ID 10 gives hash value 0
+    uni.courses_bst_add(20, "Course 20", 3, "Instructor B"); // Assuming ID 20 also gives hash value 0 (collision)
+    cout << "Added Course 10 and Course 20, checking collision handling.\n";
+    uni.searchWithHashing(10); // Should find Course 10
+    uni.searchWithHashing(20); // Should find Course 20
+
+    // Case 2: Test very large IDs
+    cout << "\nTesting Hash Table with Very Large IDs...\n";
+    int large_id = 1000000000;
+    uni.courses_bst_add(large_id, "Big Course", 3, "Instructor C");
+    cout << "Added course with large ID: " << large_id << endl;
+    uni.searchWithHashing(large_id); // Should find the course with the large ID
+
+    // Case 3: Test searching for very large ID
+    int invalid_large_id = 1000000001;
+    cout << "Searching for non-existent course with ID: " << invalid_large_id << endl;
+    uni.searchWithHashing(invalid_large_id); // Should return "Not Found"
+}
+
 //!!!!!!! TO RUN THE TEST YOU HAVE TO COMMENT THE MAIN IN THE main.cpp !!!!!!!!!!!!!
 int main()
 {
@@ -327,5 +408,6 @@ int main()
     // test_case();
     // test_bst();
     //Display_Menu();
+    test_university_main();
     return 0;
 }
