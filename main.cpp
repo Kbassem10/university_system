@@ -4,6 +4,13 @@
 #include <vector>
 
 using namespace std;
+
+struct Course;
+struct Student;
+struct Course_Waitlist;
+// Forward declaration of Course_enrollment_History
+class Course_enrollment_History;
+
 void clearScreen()
 {
 #ifdef _WIN32
@@ -12,11 +19,13 @@ void clearScreen()
     system("clear");
 #endif
 }
+
 void pause()
 {
     cout << "Press Enter to continue...";
     cin.get();
 }
+
 void Display_Menu()
 {
     int choice;
@@ -45,39 +54,128 @@ void Display_Menu()
     } while (choice != 0);
 }
 
+struct Course
+{
+    int id;
+    string name;
+    int credits;
+    Course *left;
+    Course *right;
+    string CourseInstructor;
+    int course_limit;
+    int current_number_of_enrollments;
+
+    Course(int id, const string &name, int credits, const string &CourseInstructor, int course_limit, int current_number_of_enrollments)
+        : id(id), name(name), credits(credits), left(nullptr), right(nullptr), CourseInstructor(CourseInstructor), course_limit(course_limit), current_number_of_enrollments(current_number_of_enrollments) {}
+};
+
+struct Student
+{
+    int id;
+    string name;
+    string email;
+    Student *next;
+    Course_enrollment_History *enrollmentHistory;
+    Student(int studentId, const string& studentName, const string& studentEmail);
+};
+
 struct Course_enrollment_Node
 {
-    string course_name;
+    Course* course;
     Course_enrollment_Node *next;
     Course_enrollment_Node *prev;
 
-    Course_enrollment_Node(string courseName)
-        : course_name(courseName), next(nullptr), prev(nullptr) {}
+    Course_enrollment_Node(Course* course)
+        : course(course), next(nullptr), prev(nullptr) {}
 };
 
-class Course_enrollment_History
+struct Course_Waitlist
 {
+public:
+    struct WaitlistNode
+    {
+        Student* student;
+        WaitlistNode *next;
+
+        WaitlistNode(Student* this_student) : student(this_student), next(nullptr) {}
+    };
+
+    WaitlistNode *front;
+    WaitlistNode *rear;
+
+    Course_Waitlist() : front(nullptr), rear(nullptr) {}
+
+    void enqueue(Student* student)
+    {
+        WaitlistNode *new_student = new WaitlistNode(student);
+        if (!rear){
+            front = rear = new_student;
+        }
+        else{
+            rear->next = new_student;
+            rear = new_student;
+        }
+        cout << "Added to waitlist: " << student->name << endl;
+    };
+
+    Student* dequeue(){
+        if (!front){
+            cout << "Waitlist is empty." << endl;
+            return NULL;
+        }
+        WaitlistNode *temp = front;
+        front = front->next;
+        if (front == nullptr){
+            rear = nullptr;
+        }
+        cout << "Enrolled from waitlist: " << temp->student->name << endl;
+        return temp->student;
+    }
+
+    void displayWaitlist() const{
+        if (front == nullptr)
+        {
+            cout << "Waitlist is empty." << endl;
+            return;
+        }
+
+        cout << "Current Waitlist:" << endl;
+        WaitlistNode *current = front;
+        while (current != nullptr)
+        {
+            cout << "- " << current->student->name << endl;
+            current = current->next;
+        }
+    }
+};
+
+class Course_enrollment_History{
 public:
     Course_enrollment_Node *head;
     Course_enrollment_Node *tail;
+    Course_Waitlist course_waitlist;
     Course_enrollment_History() : head(nullptr), tail(nullptr) {}
 
-    void add_course(string course_name)
-    {
-        Course_enrollment_Node *new_Course = new Course_enrollment_Node(course_name);
-        if (!head)
-        {
-            head = tail = new_Course;
+    int add_course(Course* course, Student* student){
+        if(course->course_limit <= course->current_number_of_enrollments){
+            course_waitlist.enqueue(student);
+            return 0;
         }
-        else
-        {
+        Course_enrollment_Node *new_Course = new Course_enrollment_Node(course);
+        course->current_number_of_enrollments++;
+        if (!head){
+            head = tail = new_Course;
+            return 1;
+        }
+        else{
             tail->next = new_Course;
             new_Course->prev = tail;
             tail = new_Course;
+            return 1;
         }
     }
-    bool check_course_enrollment(string course)
-    {
+
+    bool check_course_enrollment(int id){
         bool flag = false;
         if (!head)
         {
@@ -88,7 +186,7 @@ public:
             Course_enrollment_Node *current = head;
             while (current != nullptr)
             {
-                if (current->course_name == course)
+                if (current->course->id == id)
                 {
                     flag = true;
                 }
@@ -97,8 +195,8 @@ public:
         }
         return flag;
     }
-    void view_enrollment_History()
-    {
+
+    void view_enrollment_History(){
         if (!head)
         {
             cout << "No courses enrolled." << endl;
@@ -109,24 +207,66 @@ public:
         cout << "Enrollment History:" << endl;
         while (current)
         {
-            cout << "- " << current->course_name << endl;
+            cout << "- " << current->course->name << endl;
             current = current->next;
         }
     }
-};
 
-struct Student
-{
-    int id;
-    string name;
-    string email;
-    Student *next;
-    Course_enrollment_History *enrollmentHistory;
-    Student(int studentId, const string &studentName, const string &studentEmail) : id(studentId), name(studentName), email(studentEmail), next(nullptr)
-    {
-        enrollmentHistory = new Course_enrollment_History();
+    void student_drop_course(int id){
+        if(head == NULL){
+            cout << "No courses enrolled." << endl;
+            return;
+        }
+        Course_enrollment_Node* current = head;
+
+        while(current != NULL && current->course->id != id){
+            current = current->next;
+        }
+
+        if(current == NULL){
+            cout<<"Course Not Found!"<<endl;
+            return;
+        }
+
+        if (current == head) {
+            head = head->next;
+            if (head != NULL) {
+                head->prev = NULL;
+            }
+        }
+
+        else {
+            current->prev->next = current->next;
+            if (current->next != NULL) {
+                current->next->prev = current->prev;
+            }
+        }
+        cout << "Course dropped successfully." << endl;
+
+        Student* student = course_waitlist.dequeue();
+
+        current->course->current_number_of_enrollments--;
+
+        student->enrollmentHistory->add_course(current->course, student);
+
+        delete current;
     }
 };
+
+// Implementation of Student constructor
+Student::Student(int studentId, const string& studentName, const string& studentEmail)
+    : id(studentId), name(studentName), email(studentEmail), next(nullptr), enrollmentHistory(nullptr) {
+    enrollmentHistory = new Course_enrollment_History();
+}
+
+struct stackCourseRegistration
+{
+    string Coursename;
+    int Studentid;
+    stackCourseRegistration *next;
+    stackCourseRegistration(string Courseid, int Studentid) : Coursename(Courseid), Studentid(Studentid), next(nullptr) {}
+};
+
 class StudentRecords // shalaby ysheel w yktbha Raqam 1
 {
 private:
@@ -210,13 +350,7 @@ public:
         return head;
     }
 };
-struct stackCourseRegistration
-{
-    string Coursename;
-    int Studentid;
-    stackCourseRegistration *next;
-    stackCourseRegistration(string Courseid, int Studentid) : Coursename(Courseid), Studentid(Studentid), next(nullptr) {}
-};
+
 class stackcourses
 {
 
@@ -254,95 +388,14 @@ public:
     }
 };
 
-struct WaitlistNode
-{
-    string studentName;
-    WaitlistNode *next;
-
-    WaitlistNode(const string &name) : studentName(name), next(nullptr) {}
-};
-class Course_Waitlist
-{
-public:
-    WaitlistNode *front;
-    WaitlistNode *rear;
-
-    Course_Waitlist() : front(nullptr), rear(nullptr) {}
-
-    void enqueue(const string &studentName)
-    {
-        WaitlistNode *new_student = new WaitlistNode(studentName);
-        if (!rear)
-        {
-            front = rear = new_student;
-        }
-        else
-        {
-            rear->next = new_student;
-            rear = new_student;
-        }
-        cout << "Added to waitlist: " << studentName << endl;
-    };
-
-
-    void dequeue()
-    {
-        if (!front)
-        {
-            cout << "Waitlist is empty." << endl;
-            return;
-        }
-        WaitlistNode *temp = front;
-        front = front->next;
-        if (front == nullptr)
-        {
-            rear = nullptr;
-        }
-        cout << "Enrolled from waitlist: " << temp->studentName << endl;
-        delete temp;
-    }
-
-    void displayWaitlist() const
-    {
-        if (front == nullptr)
-        {
-            cout << "Waitlist is empty." << endl;
-            return;
-        }
-
-        cout << "Current Waitlist:" << endl;
-        WaitlistNode *current = front;
-        while (current != nullptr)
-        {
-            cout << "- " << current->studentName << endl;
-            current = current->next;
-        }
-    }
-};
-
-struct Course
-{
-    int id;
-    string name;
-    int credits;
-    Course *left;
-    Course *right;
-    Course_Waitlist waitlist;
-    string CourseInstructor;
-
-    Course(int id, const string &name, int credits, const string &CourseInstructor)
-        : id(id), name(name), credits(credits), left(nullptr), right(nullptr), CourseInstructor(CourseInstructor) {}
-};
 class bst // Fahmy yeshel w yktbha Raqam 2
 {
 public:
     Course *root;
-    int course_limit;
     bst() { root = nullptr; }
     Course* addcourse(int idcourse, string namecourse, int creditscourse, string teachers, int limit)
     {
-        course_limit = limit;
-        Course *newcourse = new Course(idcourse, namecourse, creditscourse, teachers);
+        Course *newcourse = new Course(idcourse, namecourse, creditscourse, teachers, limit, 0);
         if (root == nullptr)
         {
             root = newcourse;
@@ -466,6 +519,7 @@ public:
         display(node->right);
     }
 };
+
 Student *linear_search_student(Student *head, int student_id)
 {
     if (head == NULL)
@@ -745,11 +799,14 @@ class university_main{
     private:
         Course_enrollment_History course_enrollment_DLL;
         StudentRecords student_records;
-        Course_Waitlist course_waitlist;
         hash_table hash;
         bst courses_bst;
         //course_registration_stack
     public:
+        university_main()
+            : course_enrollment_DLL(), student_records(), hash(), courses_bst() {
+            // Explicitly initialize members if required
+        }
         //single linked list
 
         //bst
@@ -769,8 +826,21 @@ class university_main{
         }
 
         //DLL
-        void course_add_DLL(string course_name){
-            course_enrollment_DLL.add_course(course_name);
+        void course_add_DLL(int course_id, int student_id){
+            Student *student = linear_search_student(student_records.get_head(), student_id);
+            if (student == NULL){
+                cout << "Student Not Found!" << endl;
+                return;
+            }
+
+            Course *course = binary_search_course(courses_bst.root, course_id);
+
+            if (course == NULL){
+                cout << "Course Not Found!" << endl;
+                return;
+            }
+
+            student->enrollmentHistory->add_course(course, student);
         }
 
         void view_enrollment_History_DLL(){
@@ -778,15 +848,6 @@ class university_main{
         }
 
         //stack
-
-        //queue
-        void Course_Waitlist_enqueue(string student_name){
-            course_waitlist.enqueue(student_name);
-        }
-
-        void Course_Waitlist_dequeue(){
-            course_waitlist.dequeue();
-        }
 
         //search
         void search_student(int student_id){
