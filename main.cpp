@@ -210,6 +210,42 @@ public:
         return head;
     }
 };
+struct stackCourseRegistration{
+    string Coursename;
+    int Studentid;
+    stackCourseRegistration *next;
+    stackCourseRegistration(string Courseid,int Studentid): Coursename(Coursename), Studentid(Studentid), next(nullptr){}
+
+};
+class stackcourses{
+
+private:
+    stackCourseRegistration *top;
+public:
+    stackcourses(){
+        top=nullptr;
+    }
+    void push(string Coursename, int Studentid){
+        stackCourseRegistration *newnode= new stackCourseRegistration(Coursename, Studentid);
+        newnode->next=top;
+        top=newnode;
+    }
+    void pop(){
+        if(top==nullptr){
+            cout<<"Stack is empty!";
+            return;
+        }
+        else{
+            stackCourseRegistration *temp=top;
+            top=top->next;
+            delete temp;
+        }
+        bool isEmpty(){
+            return top==nullptr;
+        }
+
+};
+
 
 struct WaitlistNode
 {
@@ -531,7 +567,7 @@ Course* array_to_bts(vector<Course*>& nodes,int start, int end){
 
     int mid = (start + end) / 2;
     Course* new_root = nodes[mid];
-    
+
     new_root->left = array_to_bts(nodes, start, mid -1);
     new_root->right = array_to_bts(nodes, mid+1, end);
 
