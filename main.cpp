@@ -210,42 +210,49 @@ public:
         return head;
     }
 };
-struct stackCourseRegistration{
+struct stackCourseRegistration
+{
     string Coursename;
     int Studentid;
     stackCourseRegistration *next;
-    stackCourseRegistration(string Courseid,int Studentid): Coursename(Coursename), Studentid(Studentid), next(nullptr){}
-
+    stackCourseRegistration(string Courseid, int Studentid) : Coursename(Courseid), Studentid(Studentid), next(nullptr) {}
 };
-class stackcourses{
+class stackcourses
+{
 
 private:
     stackCourseRegistration *top;
+
 public:
-    stackcourses(){
-        top=nullptr;
+    stackcourses()
+    {
+        top = nullptr;
     }
-    void push(string Coursename, int Studentid){
-        stackCourseRegistration *newnode= new stackCourseRegistration(Coursename, Studentid);
-        newnode->next=top;
-        top=newnode;
+    void push(string Coursename, int Studentid)
+    {
+        stackCourseRegistration *newnode = new stackCourseRegistration(Coursename, Studentid);
+        newnode->next = top;
+        top = newnode;
     }
-    void pop(){
-        if(top==nullptr){
-            cout<<"Stack is empty!";
+    void pop()
+    {
+        if (top == nullptr)
+        {
+            cout << "Stack is empty!";
             return;
         }
-        else{
-            stackCourseRegistration *temp=top;
-            top=top->next;
+        else
+        {
+            stackCourseRegistration *temp = top;
+            top = top->next;
             delete temp;
         }
-        bool isEmpty(){
-            return top==nullptr;
-        }
-
+    }
+    bool isEmpty()
+    {
+        return top == nullptr;
+    }
 };
-
 
 struct WaitlistNode
 {
@@ -515,7 +522,7 @@ void linked_list_swap(Student *node1, Student *node2)
     node2->email = temp_email;
 }
 
-Student* sort_student(Student *head)
+Student *sort_student(Student *head)
 {
     if (head == NULL)
     {
@@ -548,8 +555,10 @@ Student* sort_student(Student *head)
     return head;
 }
 
-void in_order_bts_to_array(Course* root, vector<Course*>& nodes){
-    if(root == NULL){
+void in_order_bts_to_array(Course *root, vector<Course *> &nodes)
+{
+    if (root == NULL)
+    {
         return;
     }
     in_order_bts_to_array(root->left, nodes);
@@ -557,27 +566,31 @@ void in_order_bts_to_array(Course* root, vector<Course*>& nodes){
     in_order_bts_to_array(root->right, nodes);
 }
 
-Course* array_to_bts(vector<Course*>& nodes,int start, int end){
-    if(nodes.size() == 0){
+Course *array_to_bts(vector<Course *> &nodes, int start, int end)
+{
+    if (nodes.size() == 0)
+    {
         return NULL;
     }
-    if(start > end){
+    if (start > end)
+    {
         return NULL;
     }
 
     int mid = (start + end) / 2;
-    Course* new_root = nodes[mid];
+    Course *new_root = nodes[mid];
 
-    new_root->left = array_to_bts(nodes, start, mid -1);
-    new_root->right = array_to_bts(nodes, mid+1, end);
+    new_root->left = array_to_bts(nodes, start, mid - 1);
+    new_root->right = array_to_bts(nodes, mid + 1, end);
 
     return new_root;
 }
 
-Course* sort_courses_bts(Course* root){
-    vector<Course*> bts_nodes;
+Course *sort_courses_bts(Course *root)
+{
+    vector<Course *> bts_nodes;
     in_order_bts_to_array(root, bts_nodes);
-    Course* new_root = array_to_bts(bts_nodes, 0, bts_nodes.size() - 1);
+    Course *new_root = array_to_bts(bts_nodes, 0, bts_nodes.size() - 1);
     return new_root;
 }
 
@@ -726,6 +739,5 @@ int main()
     // test_sort_student();
     // test_case();
     // test_bst();
-    Display_Menu();
     return 0;
 }
