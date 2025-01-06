@@ -5,12 +5,12 @@
 
 using namespace std;
 
-//Forward Declaration because we need to use them before they were written
+// Forward Declaration because we need to use them before they were written
 struct Course;
 class Course_enrollment_History;
 Course *binary_search_course(Course *root, int course_id);
 
-//struct of the stack
+// struct of the stack
 struct stackCourseRegistration
 {
     int CourseID;
@@ -18,7 +18,7 @@ struct stackCourseRegistration
     stackCourseRegistration(int Courseid) : CourseID(Courseid), next(nullptr) {}
 };
 
-//STACK
+// STACK
 class stackcourses
 {
 public:
@@ -55,7 +55,7 @@ public:
     }
 };
 
-//COURSE struct
+// COURSE struct
 struct Course
 {
     int id;
@@ -72,7 +72,7 @@ struct Course
         : id(id), name(name), credits(credits), left(nullptr), right(nullptr), CourseInstructor(CourseInstructor), course_limit(course_limit), current_number_of_enrollments(current_number_of_enrollments) {}
 };
 
-//student struct
+// student struct
 struct Student
 {
     int id;
@@ -83,7 +83,7 @@ struct Student
     Student(int studentId, const string &studentName, const string &studentEmail);
 };
 
-//DLL Node
+// DLL Node
 struct Course_enrollment_Node
 {
     Course *course;
@@ -94,7 +94,7 @@ struct Course_enrollment_Node
         : course(course), next(nullptr), prev(nullptr) {}
 };
 
-//QUEUE
+// QUEUE
 class Course_Waitlist
 {
 public:
@@ -161,7 +161,7 @@ public:
     }
 };
 
-//DLL
+// DLL
 class Course_enrollment_History
 {
 public:
@@ -281,23 +281,19 @@ public:
     }
 };
 
-//inheritance from the Student but not with the student struct because it needs the Course_enrollment_History to be decalred before it
+// inheritance from the Student but not with the student struct because it needs the Course_enrollment_History to be decalred before it
 Student::Student(int studentId, const string &studentName, const string &studentEmail)
     : id(studentId), name(studentName), email(studentEmail), next(nullptr), enrollmentHistory(nullptr)
 {
     enrollmentHistory = new Course_enrollment_History();
 }
 
-//SLL from the student struct
-class StudentRecords 
+// SLL from the student struct
+class StudentRecords
 {
 public:
     Student *head;
     Student *tail;
-    Student *get_head()
-    {
-        return head;
-    }
 
     StudentRecords() : head(nullptr) {}
 
@@ -316,13 +312,16 @@ public:
         cout << "Student added: " << name << endl;
     }
 
-    void remove(int id) {
-        if (!head) {
+    void remove(int id)
+    {
+        if (!head)
+        {
             cout << "Student list is empty.\n";
             return;
         }
 
-        if (head->id == id) {
+        if (head->id == id)
+        {
             Student *toDelete = head;
             head = head->next;
             delete toDelete;
@@ -331,11 +330,13 @@ public:
         }
 
         Student *current = head;
-        while (current->next && current->next->id != id) {
+        while (current->next && current->next->id != id)
+        {
             current = current->next;
         }
 
-        if (!current->next) {
+        if (!current->next)
+        {
             cout << "Student with ID " << id << " not found.\n";
             return;
         }
@@ -379,7 +380,7 @@ public:
     }
 };
 
-//BST to the courses
+// BST to the courses
 class bst
 {
 public:
@@ -563,7 +564,7 @@ public:
     }
 };
 
-//search on the SLL
+// search on the SLL
 Student *linear_search_student(Student *head, int student_id)
 {
     if (head == NULL)
@@ -582,7 +583,7 @@ Student *linear_search_student(Student *head, int student_id)
     return NULL;
 }
 
-//search on the BST
+// search on the BST
 Course *binary_search_course(Course *root, int course_id)
 {
     Course *current = root;
@@ -607,7 +608,7 @@ Course *binary_search_course(Course *root, int course_id)
     return current;
 }
 
-//helper function to swap on the sort function
+// helper function to swap on the sort function
 void linked_list_swap(Student *node1, Student *node2)
 {
     if (!node1 || !node2)
@@ -628,7 +629,7 @@ void linked_list_swap(Student *node1, Student *node2)
     node2->email = temp_email;
 }
 
-//sort the SLL
+// sort the SLL
 Student *sort_student(Student *head)
 {
     if (head == NULL)
@@ -662,7 +663,7 @@ Student *sort_student(Student *head)
     return head;
 }
 
-//a helper function to convert the BST to an array
+// a helper function to convert the BST to an array
 void in_order_bts_to_array(Course *root, vector<Course *> &nodes)
 {
     if (root == NULL)
@@ -674,7 +675,7 @@ void in_order_bts_to_array(Course *root, vector<Course *> &nodes)
     in_order_bts_to_array(root->right, nodes);
 }
 
-//helper function to convert the array to a bst
+// helper function to convert the array to a bst
 Course *array_to_bts(vector<Course *> &nodes, int start, int end)
 {
     if (nodes.size() == 0)
@@ -695,7 +696,7 @@ Course *array_to_bts(vector<Course *> &nodes, int start, int end)
     return new_root;
 }
 
-//a function to balance the BST
+// a function to balance the BST
 Course *sort_courses_bts(Course *root)
 {
     vector<Course *> bts_nodes;
@@ -704,7 +705,7 @@ Course *sort_courses_bts(Course *root)
     return new_root;
 }
 
-//HASH TABLE "BONUS"
+// HASH TABLE "BONUS"
 class hash_table
 {
 private:
@@ -848,7 +849,7 @@ public:
     }
 };
 
-//function to validate the the Prerequisites using a stack
+// function to validate the the Prerequisites using a stack
 bool validatePrerequisites(Course course, Student Student)
 {
     bool flag = true;
@@ -866,7 +867,7 @@ bool validatePrerequisites(Course course, Student Student)
         return 1;
     }
 }
-//function to display the remaining Prerequisites in the course
+// function to display the remaining Prerequisites in the course
 void Display_remaining_Prerequisites(Course course, Student Student)
 {
     bool flag = true;

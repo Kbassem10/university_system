@@ -17,7 +17,7 @@ void pause()
     cin.ignore();
     cin.get();
 }
-void Courses_menu(university_main uni)
+void Courses_menu(university_main &uni)
 {
 }
 void Students_menu(university_main &uni)
@@ -30,7 +30,8 @@ void Students_menu(university_main &uni)
     cout << "3 - View Student\n";
     cout << "4 - Enroll in a Course\n";
     cout << "5 - Drop a Course\n";
-    cout << "6 - Validate Courses Enrollment\n";
+    cout << "6 - Display enrollments\n";
+    cout << "7 - Display students\n";
     cout << "0 - Back to Main Menu\n";
     cout << "Enter your choice: ";
     cin >> choice;
@@ -43,37 +44,76 @@ void Students_menu(university_main &uni)
         int id;
         string name;
         string email;
-        cout << "Enter student id\n";
+        cout << "Enter student id: \n";
         cin >> id;
-        cout << "Enter student name\n";
+        cout << "Enter student name: \n";
         cin >> name;
-        cout << "Enter student email";
+        cout << "Enter student email: \n";
         cin >> email;
         uni.add_student(id, name, email);
         break;
     }
     case 2:
+    {
         cout << "Removing a student...\n";
+        int id;
+        cout << "Enter student ID: ";
+        cin >> id;
+        uni.delete_student(id);
         break;
+    }
     case 3:
+    {
         cout << "Viewing a student...\n";
+        int id;
+        cout << "Enter student ID: ";
+        cin >> id;
+        uni.display_student_details(id);
         break;
+    }
     case 4:
+    {
         cout << "Enrolling in a course...\n";
+        int student_id;
+        cout << "Enter student ID: ";
+        cin >> student_id;
+        int course_id;
+        cout << "Enter course ID: ";
+        cin >> course_id;
+        uni.enroll_course(course_id, student_id);
         break;
+    }
     case 5:
+    {
         cout << "Dropping a course...\n";
+        int student_id;
+        cout << "Enter student ID: ";
+        cin >> student_id;
+        int course_id;
+        cout << "Enter course ID: ";
+        cin >> course_id;
+        uni.student_drop_course(course_id, student_id);
         break;
+    }
     case 6:
-        cout << "Validating courses enrollment...\n";
+    {
+        cout << "Displaying enrollments\n";
+        int student_id;
+        cout << "Enter student ID: ";
+        cin >> student_id;
+        uni.display_enrollments(student_id);
         break;
-
+    }
+    case 7:
+    {
+        cout << "Displaying students\n";
+    }
     default:
         cout << "Invalid choice. Please try again.\n";
     }
     pause();
 }
-void Display_Menu(university_main& uni)
+void Display_Menu(university_main &uni)
 {
     int choice;
     do
@@ -85,7 +125,7 @@ void Display_Menu(university_main& uni)
         cout << "1. Courses Menu\n";
         cout << "\t add,remove,display,view prerequisites\n";
         cout << "2. Students Menu\n";
-        cout << "\t add,remove,display,enroll course,drop course,validate courses enrollment, view enrollments\n";
+        cout << "\t add,remove,display,enroll course,drop course, view enrollments\n";
         cout << "0. Exit\n";
         cout << "Enter your choice: ";
         cin >> choice;
