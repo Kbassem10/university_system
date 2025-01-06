@@ -306,13 +306,12 @@ public:
         Student *newStudent = new Student{id, name, email};
         if (!head)
         {
-            head = newStudent;
+            head = tail = newStudent;
         }
         else
         {
-            tail->next= newStudent;
-            tail= newStudent;
-            
+            tail->next = newStudent;
+            tail = newStudent;
         }
         cout << "Student added: " << name << endl;
     }

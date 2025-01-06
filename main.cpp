@@ -14,16 +14,16 @@ public:
     {
     }
     // single linked list
-    void add_student(int id, string name, string email)
-    {
+    void add_student(int id, string name, string email){
         Student *student = linear_search_student(student_records.head, id);
         if (student == NULL)
         {
             student_records.add(id, name, email);
+            cout<<"Student Added!"<<endl;
         }
         else
         {
-            cout<< "already exists\n";
+            cout<<"already exists"<<endl;
         }
     }
 

@@ -20,7 +20,7 @@ void pause()
 void Courses_menu(university_main uni)
 {
 }
-void Students_menu(university_main uni)
+void Students_menu(university_main &uni)
 {
     clearScreen();
     int choice;
@@ -73,7 +73,7 @@ void Students_menu(university_main uni)
     }
     pause();
 }
-void Display_Menu(university_main uni)
+void Display_Menu(university_main& uni)
 {
     int choice;
     do
