@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include "main.cpp"
 using namespace std;
 
 void clearScreen()
@@ -10,79 +11,104 @@ void clearScreen()
     system("clear");
 #endif
 }
-
 void pause()
 {
     cout << "Press Enter to continue...";
+    cin.ignore();
     cin.get();
 }
-void Courses_menu()
+void Courses_menu(university_main uni)
 {
 }
-void Students_menu()
+void Students_menu(university_main uni)
 {
+    clearScreen();
+    int choice;
+    cout << "\t\t\t\t Students Menu \t\t\t\t\n";
+    cout << "1 - Add Student\n";
+    cout << "2 - Remove Student\n";
+    cout << "3 - View Student\n";
+    cout << "4 - Enroll in a Course\n";
+    cout << "5 - Drop a Course\n";
+    cout << "6 - Validate Courses Enrollment\n";
+    cout << "0 - Back to Main Menu\n";
+    cout << "Enter your choice: ";
+    cin >> choice;
+
+    switch (choice)
+    {
+    case 1:
+    {
+        cout << "Adding a student...\n";
+        int id;
+        string name;
+        string email;
+        cout << "Enter student id\n";
+        cin >> id;
+        cout << "Enter student name\n";
+        cin >> name;
+        cout << "Enter student email";
+        cin >> email;
+        uni.add_student(id, name, email);
+        break;
+    }
+    case 2:
+        cout << "Removing a student...\n";
+        break;
+    case 3:
+        cout << "Viewing a student...\n";
+        break;
+    case 4:
+        cout << "Enrolling in a course...\n";
+        break;
+    case 5:
+        cout << "Dropping a course...\n";
+        break;
+    case 6:
+        cout << "Validating courses enrollment...\n";
+        break;
+
+    default:
+        cout << "Invalid choice. Please try again.\n";
+    }
+    pause();
 }
-void Display_Menu()
+void Display_Menu(university_main uni)
 {
     int choice;
-    cout << "\t\t\t\t Welcome to Hellhound University\t\t\t\t" << endl;
-    pause();
     do
     {
         clearScreen();
         cout << "\n----------------------\n";
-        cout << " Hellhound University\n";
+        cout << " HellHound University\n";
         cout << "----------------------\n";
-        cout << "1. Courses menu\n";
-        cout << "*containts:"<<endl;
-        cout << "\t ADD,Remove,View Courses\n";
-        cout << "----------------------\n";
-        cout << "2. Students menu\n";
-        cout << "\t ADD,Remove,View students\n";
-        cout << "\t Enroll,Drop,Validate courses enrollment\n";
-        cout << "----------------------\n";
+        cout << "1. Courses Menu\n";
+        cout << "\t add,remove,display,view prerequisites\n";
+        cout << "2. Students Menu\n";
+        cout << "\t add,remove,display,enroll course,drop course,validate courses enrollment, view enrollments\n";
         cout << "0. Exit\n";
         cout << "Enter your choice: ";
-
         cin >> choice;
-        cin.ignore();
-        while (true)
-        {
-            string input;
-            getline(cin, input);
-            try
-            {
-                choice = stoi(input);
-                break;
-            }
-            catch (...)
-            {
-                cout << "Invalid input! Please enter a valid number: ";
-            }
-        }
+
         switch (choice)
         {
         case 1:
-        {
-            Courses_menu;
+            Courses_menu(uni);
             break;
-        }
         case 2:
-        {
-            Students_menu;
+            Students_menu(uni);
             break;
-        }
         case 0:
-        {
             cout << "Exiting program. Goodbye!\n";
             break;
-        }
         default:
             cout << "Invalid choice. Please try again.\n";
+            pause();
         }
     } while (choice != 0);
 }
 int main()
 {
-    Display_Menu();
+    university_main uni;
+    Display_Menu(uni);
 }

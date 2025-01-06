@@ -289,11 +289,11 @@ Student::Student(int studentId, const string &studentName, const string &student
 }
 
 //SLL from the student struct
-class StudentRecords //shalaby ysheel w yktbha Raqam 1
+class StudentRecords 
 {
-private:
-    Student *head;
 public:
+    Student *head;
+    Student *tail;
     Student *get_head()
     {
         return head;
@@ -301,7 +301,7 @@ public:
 
     StudentRecords() : head(nullptr) {}
 
-    void add(int id, const string &name, const string &email, string phone, string address, string password)
+    void add(int id, const string &name, const string &email)
     {
         Student *newStudent = new Student{id, name, email};
         if (!head)
@@ -310,49 +310,41 @@ public:
         }
         else
         {
-            Student *temp = head;
-            while (temp->next)
-            {
-                temp = temp->next;
-            }
-            temp->next = newStudent;
+            tail->next= newStudent;
+            tail= newStudent;
+            
         }
         cout << "Student added: " << name << endl;
     }
 
-    void remove(int id)
-    {
-        if (!head)
-        {
-            cout << "Student not found.\n";
+    void remove(int id) {
+        if (!head) {
+            cout << "Student list is empty.\n";
             return;
         }
 
-        if (head->id == id)
-        {
+        if (head->id == id) {
             Student *toDelete = head;
             head = head->next;
             delete toDelete;
-            cout << "Student removed.\n";
+            cout << "Student with ID " << id << " removed successfully.\n";
             return;
         }
 
-        Student *temp = head;
-        while (temp->next && temp->next->id != id)
-        {
-            temp = temp->next;
+        Student *current = head;
+        while (current->next && current->next->id != id) {
+            current = current->next;
         }
 
-        if (!temp->next)
-        {
-            cout << "Student not found.\n";
+        if (!current->next) {
+            cout << "Student with ID " << id << " not found.\n";
             return;
         }
 
-        Student *toDelete = temp->next;
-        temp->next = temp->next->next;
+        Student *toDelete = current->next;
+        current->next = current->next->next;
         delete toDelete;
-        cout << "Student removed.\n";
+        cout << "Student with ID " << id << " removed successfully.\n";
     }
 
     void display() const

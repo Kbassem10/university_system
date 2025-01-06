@@ -1,23 +1,30 @@
 #include "university.cpp"
-#include "display.cpp"
+
 
 class university_main
 {
-private:
+public:
     Course_enrollment_History course_enrollment_DLL;
     StudentRecords student_records;
     hash_table hash;
     bst courses_bst;
     // course_registration_stack
-public:
     university_main()
         : course_enrollment_DLL(), student_records(), hash(), courses_bst()
     {
     }
     // single linked list
-    void add_student(int id, string name, string email, string phone, string address, string password)
+    void add_student(int id, string name, string email)
     {
-        student_records.add(id, name, email, phone, address, password);
+        Student *student = linear_search_student(student_records.head, id);
+        if (student == NULL)
+        {
+            student_records.add(id, name, email);
+        }
+        else
+        {
+            cout<< "already exists\n";
+        }
     }
 
     void delete_student(int id)
@@ -75,16 +82,18 @@ public:
     // stack
 
     // search
-    void search_student(int student_id)
+    bool search_student(int student_id)
     {
-        Student *student = linear_search_student(student_records.get_head(), student_id);
+        Student *student = linear_search_student(student_records.head, student_id);
+        
         if (student == NULL)
         {
-            cout << "Student Not Found!" << endl;
+            cout<<"festek";
+            return 0;
         }
         else
         {
-            cout << "Student Found, Name: " << student->name << endl;
+            return 1;
         }
     }
 
