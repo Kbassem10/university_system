@@ -57,8 +57,7 @@ public:
         }
     }
      bool courseexist(int id){
-         return courses_bst.search(id) != nullptr;
-
+         return binary_search_course(courses_bst.root ,id) != nullptr;
     }
     void addcourse(){
         int idcourse,credithours,limit;
@@ -72,18 +71,18 @@ public:
             cout << "Enter course name: ";
             cin >> namecourse;
             cout << "Enter number of credits: ";
-            cin >> creditscourse;
+            cin >> credithours;
             cout << "Enter instructor name: ";
             cin >> teachers;
             cout << "Enter course enrollment limit: ";
             cin >> limit;
-            courses_bst_add(idcourse, namecourse, credithours, teachers, limit);
+            courses_bst.addcourse(idcourse, namecourse, credithours, teachers, limit);
             cout<<"Course is added";
          }
     }
     void displaycourses(){
         cout<<"display all courses \n";
-        courses_bst.display();
+        courses_bst.display(courses_bst.root);
 
     }
     void Removecourse(){
@@ -102,28 +101,26 @@ public:
         int idcourse;
         cout<< "Enter course id to see the prequist: "<<endl;
         cin>>idcourse;
-        Course *course=courses_bst.find(idcourse);
-        displayPrerequisites(course);
+        Course *course= binary_search_course(courses_bst.root, idcourse);
+        Display_remaining_Prerequisites(course);//bos di bta5od 2 inputs ro7 bos 3aleha felk a5er fel university.cpp w 3adel kol el araf da
     }
     void waitlist(){
          int idcourse;
         cout << "Enter course id to see the waiting list: ";
         cin >> idcourse;
-        Course *course=courses_bst.find(idcourse);
+        Course *course=binary_search_course(courses_bst.root ,idcourse);
         if(!course){
             cout<<"not found any course with this id."<<endl;
             return;
         }
-        if(course->idcourse.size() <= course->limit){
+        if(course->current_number_of_enrollments <= course->course_limit){
             cout<<"no waiting list"<<endl;
         }
         else{
-            course->waitlist.displayWaitlist();
+            //el ta7t di el tari2a el wa7ida bel shakl el 7ali ya2ema hanetar ne8ayar 7agat ketir mooot
+            course_enrollment_DLL.course_waitlist.displayWaitlist(course);
         }
-
     }
-
-
 
     // DLL
     void enroll_course(int course_id, int student_id)

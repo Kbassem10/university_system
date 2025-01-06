@@ -17,6 +17,8 @@ void pause()
     cin.ignore();
     cin.get();
 }
+
+
 void Courses_menu(university_main &uni)
 {
     int choice;
@@ -37,7 +39,7 @@ void Courses_menu(university_main &uni)
             uni.displaycourses();
             break;
         case 3:
-            uni.removecourse();
+            uni.Removecourse();
             break;
         case 4:
             uni.viewpre();
@@ -48,11 +50,8 @@ void Courses_menu(university_main &uni)
         default:
             cout << "Invalid choice. Please try again.\n";
         }
-
-        }
-        while (choice != 0){
-            return 0;
-        }
+    }
+        while (choice != 0);
 }
 void Students_menu(university_main &uni)
 {

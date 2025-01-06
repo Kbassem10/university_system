@@ -94,26 +94,28 @@ struct Course_enrollment_Node
         : course(course), next(nullptr), prev(nullptr) {}
 };
 
+struct WaitlistNode
+    {
+        Student *student;
+        Course* course;
+        WaitlistNode *next;
+
+        WaitlistNode(Student *this_student, Course* this_course) : student(this_student), course(this_course), next(nullptr) {}
+    };
+
 // QUEUE
 class Course_Waitlist
 {
 public:
-    struct WaitlistNode
-    {
-        Student *student;
-        WaitlistNode *next;
-
-        WaitlistNode(Student *this_student) : student(this_student), next(nullptr) {}
-    };
 
     WaitlistNode *front;
     WaitlistNode *rear;
 
     Course_Waitlist() : front(nullptr), rear(nullptr) {}
 
-    void enqueue_to_waitlist(Student *student)
+    void enqueue_to_waitlist(Student *student, Course* course)
     {
-        WaitlistNode *new_student = new WaitlistNode(student);
+        WaitlistNode *new_student = new WaitlistNode(student, course);
         if (!rear)
         {
             front = rear = new_student;
@@ -123,10 +125,10 @@ public:
             rear->next = new_student;
             rear = new_student;
         }
-        cout << "Added to waitlist: " << student->name << endl;
+        cout << "Added to waitlist: " << student->name <<"of the course of : "<< course->name<< endl;
     };
 
-    Student *dequeue_from_waitlist()
+    WaitlistNode *dequeue_from_waitlist(Course* course)
     {
         if (!front)
         {
@@ -140,10 +142,10 @@ public:
             rear = nullptr;
         }
         cout << "Enrolled from waitlist: " << temp->student->name << endl;
-        return temp->student;
+        return temp;
     }
 
-    void displayWaitlist() const
+    void displayWaitlist(Course* course) const
     {
         if (front == nullptr)
         {
@@ -155,15 +157,16 @@ public:
         WaitlistNode *current = front;
         while (current != nullptr)
         {
-            cout << "- " << current->student->name << endl;
+            if(current->course == course){
+                cout << "- " << current->student->name << endl;
+            }
             current = current->next;
         }
     }
 };
 
 // DLL
-class Course_enrollment_History
-{
+class Course_enrollment_History{
 public:
     Course_enrollment_Node *head;
     Course_enrollment_Node *tail;
@@ -174,7 +177,7 @@ public:
     {
         if (course->course_limit <= course->current_number_of_enrollments)
         {
-            course_waitlist.enqueue_to_waitlist(student);
+            course_waitlist.enqueue_to_waitlist(student, course);
             return 0;
         }
         Course_enrollment_Node *new_Course = new Course_enrollment_Node(course);
@@ -271,11 +274,12 @@ public:
         }
         cout << "Course dropped successfully." << endl;
 
-        Student *student = course_waitlist.dequeue_from_waitlist();
+        WaitlistNode *data = course_waitlist.dequeue_from_waitlist(current->course);
 
         current->course->current_number_of_enrollments--;
 
-        student->enrollmentHistory->enroll_course(current->course, student);
+        //7ad yezabat di 3ashan fiha 7aga
+        data->student->enrollmentHistory->enroll_course(data->course, data->student);
 
         delete current;
     }
