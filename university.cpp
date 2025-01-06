@@ -10,6 +10,47 @@ struct Student;
 struct Course_Waitlist;
 // Forward declaration of Course_enrollment_History
 class Course_enrollment_History;
+class stackcourses;
+Course *binary_search_course(Course *root, int course_id);
+struct stackCourseRegistration
+{
+    int CourseID;
+    stackCourseRegistration *next;
+    stackCourseRegistration(int Courseid) : CourseID(Courseid), next(nullptr) {}
+};
+class stackcourses
+{
+public:
+    stackCourseRegistration *top;
+    stackcourses()
+    {
+        top = nullptr;
+    }
+    void push(int CourseID)
+    {
+        stackCourseRegistration *newnode = new stackCourseRegistration(CourseID);
+        newnode->next = top;
+        top = newnode;
+    }
+    void pop()
+    {
+        if (top == nullptr)
+        {
+            cout << "Stack is empty!";
+            return;
+        }
+        else
+        {
+            stackCourseRegistration *temp = top;
+            top = top->next;
+            delete temp;
+        }
+    }
+    bool isEmpty()
+    {
+        return top == nullptr;
+    }
+};
 
 struct Course
 {
@@ -21,6 +62,7 @@ struct Course
     string CourseInstructor;
     int course_limit;
     int current_number_of_enrollments;
+    stackcourses stack;
 
     Course(int id, const string &name, int credits, const string &CourseInstructor, int course_limit, int current_number_of_enrollments)
         : id(id), name(name), credits(credits), left(nullptr), right(nullptr), CourseInstructor(CourseInstructor), course_limit(course_limit), current_number_of_enrollments(current_number_of_enrollments) {}
@@ -237,14 +279,6 @@ Student::Student(int studentId, const string &studentName, const string &student
     enrollmentHistory = new Course_enrollment_History();
 }
 
-struct stackCourseRegistration
-{
-    string Coursename;
-    int Studentid;
-    stackCourseRegistration *next;
-    stackCourseRegistration(string Courseid, int Studentid) : Coursename(Courseid), Studentid(Studentid), next(nullptr) {}
-};
-
 class StudentRecords // shalaby ysheel w yktbha Raqam 1
 {
 private:
@@ -345,44 +379,7 @@ public:
     }
 };
 
-class stackcourses
-{
-
-private:
-    stackCourseRegistration *top;
-
-public:
-    stackcourses()
-    {
-        top = nullptr;
-    }
-    void push(string Coursename, int Studentid)
-    {
-        stackCourseRegistration *newnode = new stackCourseRegistration(Coursename, Studentid);
-        newnode->next = top;
-        top = newnode;
-    }
-    void pop()
-    {
-        if (top == nullptr)
-        {
-            cout << "Stack is empty!";
-            return;
-        }
-        else
-        {
-            stackCourseRegistration *temp = top;
-            top = top->next;
-            delete temp;
-        }
-    }
-    bool isEmpty()
-    {
-        return top == nullptr;
-    }
-};
-
-class bst // Fahmy yeshel w yktbha Raqam 2
+class bst
 {
 public:
     Course *root;
@@ -390,13 +387,39 @@ public:
     Course *addcourse(int idcourse, string namecourse, int creditscourse, string teachers, int limit)
     {
         Course *newcourse = new Course(idcourse, namecourse, creditscourse, teachers, limit, 0);
+
+        // Input for prerequisites
+        cout << "How many prerequisites does this course have? ";
+        int size;
+        cin >> size;
+
+        for (int i = 0; i < size; i++)
+        {
+            cout << "Enter prerequisite course ID: ";
+            int course_id;
+            cin >> course_id;
+
+            // Validate if the prerequisite course exists
+            Course *prerequisite = binary_search_course(root, course_id);
+            if (prerequisite)
+            {
+                newcourse->stack.push(course_id);
+            }
+            else
+            {
+                cout << "Error: Course ID " << course_id << " does not exist. Skipping." << endl;
+            }
+        }
+
+        // Add course to the BST
         if (root == nullptr)
         {
             root = newcourse;
             return newcourse;
         }
         Course *temp = root;
-        Course *parent = nullptr; //-------------> parent variable 3ashan lma temp yeb2a b null (5alas position is found) the parent variable bya5od reference elly kan a5r 7aga 3ndha
+        Course *parent = nullptr;
+
         while (temp != nullptr)
         {
             parent = temp;
@@ -410,21 +433,23 @@ public:
             }
             else
             {
-                cout << " this course is already exist";
+                cout << "Error: Course with ID " << idcourse << " already exists." << endl;
                 delete newcourse;
-                return NULL;
+                return nullptr;
             }
         }
+
         if (idcourse < parent->id)
         {
             parent->left = newcourse;
-            return newcourse;
         }
         else
         {
             parent->right = newcourse;
-            return newcourse;
         }
+
+        cout << "Course " << namecourse << " added successfully." << endl;
+        return newcourse;
     }
     int deleteCourse(int id)
     {
@@ -511,6 +536,29 @@ public:
         display(node->left);
         cout << "ID: " << node->id << ", Name: " << node->name << ", Credits: " << node->credits << ", Instructor: " << node->CourseInstructor << endl;
         display(node->right);
+    }
+    void displayPrerequisites(Course *course) // Mesh matloba bas 3amltaha wana ba-Debug
+    {
+        if (!course)
+        {
+            cout << "Error: Course not found!" << endl;
+            return;
+        }
+
+        cout << "Prerequisites for course " << course->name << " (ID: " << course->id << "):" << endl;
+
+        if (course->stack.isEmpty())
+        {
+            cout << "No prerequisites." << endl;
+            return;
+        }
+        stackcourses tempStack = course->stack;
+
+        while (!tempStack.isEmpty())
+        {
+            cout << "- Course ID: " << tempStack.top->CourseID << endl;
+            tempStack.pop();
+        }
     }
 };
 
