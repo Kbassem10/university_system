@@ -32,18 +32,20 @@ public:
         newnode->next = top;
         top = newnode;
     }
-    void pop()
+    int pop()
     {
         if (top == nullptr)
         {
             cout << "Stack is empty!";
-            return;
+            return -1;
         }
         else
         {
             stackCourseRegistration *temp = top;
+            int poped_course_id = top->CourseID;
             top = top->next;
             delete temp;
+            return poped_course_id;
         }
     }
     bool isEmpty()
@@ -838,3 +840,34 @@ public:
         return 1;
     }
 };
+
+void validatePrerequisites(Course course, Student Student)
+{
+    bool flag = true;
+    while (flag && !course.stack.isEmpty())
+    {
+        int id = course.stack.pop();
+        flag = Student.enrollmentHistory->check_course_enrollment(id);
+    }
+    if (flag == false)
+    {
+        cout << "Can't take course" << endl;
+    }
+    else
+    {
+        cout << "Can take" << endl;
+    }
+}
+void Display_remaining_Prerequisites(Course course, Student Student)
+{
+    bool flag = true;
+    while (!course.stack.isEmpty())
+    {
+        int id = course.stack.pop();
+        flag = Student.enrollmentHistory->check_course_enrollment(id);
+        if (flag == false)
+        {
+            cout << "Didn't take Course with ID: " << id << endl;
+        }
+    }
+}
