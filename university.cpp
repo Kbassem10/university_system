@@ -33,16 +33,16 @@ struct Student
     string email;
     Student *next;
     Course_enrollment_History *enrollmentHistory;
-    Student(int studentId, const string& studentName, const string& studentEmail);
+    Student(int studentId, const string &studentName, const string &studentEmail);
 };
 
 struct Course_enrollment_Node
 {
-    Course* course;
+    Course *course;
     Course_enrollment_Node *next;
     Course_enrollment_Node *prev;
 
-    Course_enrollment_Node(Course* course)
+    Course_enrollment_Node(Course *course)
         : course(course), next(nullptr), prev(nullptr) {}
 };
 
@@ -51,10 +51,10 @@ struct Course_Waitlist
 public:
     struct WaitlistNode
     {
-        Student* student;
+        Student *student;
         WaitlistNode *next;
 
-        WaitlistNode(Student* this_student) : student(this_student), next(nullptr) {}
+        WaitlistNode(Student *this_student) : student(this_student), next(nullptr) {}
     };
 
     WaitlistNode *front;
@@ -62,34 +62,40 @@ public:
 
     Course_Waitlist() : front(nullptr), rear(nullptr) {}
 
-    void enqueue(Student* student)
+    void enqueue_to_waitlist(Student *student)
     {
         WaitlistNode *new_student = new WaitlistNode(student);
-        if (!rear){
+        if (!rear)
+        {
             front = rear = new_student;
         }
-        else{
+        else
+        {
             rear->next = new_student;
             rear = new_student;
         }
         cout << "Added to waitlist: " << student->name << endl;
     };
 
-    Student* dequeue(){
-        if (!front){
+    Student *dequeue_from_waitlist()
+    {
+        if (!front)
+        {
             cout << "Waitlist is empty." << endl;
             return NULL;
         }
         WaitlistNode *temp = front;
         front = front->next;
-        if (front == nullptr){
+        if (front == nullptr)
+        {
             rear = nullptr;
         }
         cout << "Enrolled from waitlist: " << temp->student->name << endl;
         return temp->student;
     }
 
-    void displayWaitlist() const{
+    void displayWaitlist() const
+    {
         if (front == nullptr)
         {
             cout << "Waitlist is empty." << endl;
@@ -106,25 +112,30 @@ public:
     }
 };
 
-class Course_enrollment_History{
+class Course_enrollment_History
+{
 public:
     Course_enrollment_Node *head;
     Course_enrollment_Node *tail;
     Course_Waitlist course_waitlist;
     Course_enrollment_History() : head(nullptr), tail(nullptr) {}
 
-    int add_course(Course* course, Student* student){
-        if(course->course_limit <= course->current_number_of_enrollments){
-            course_waitlist.enqueue(student);
+    int enroll_course(Course *course, Student *student)
+    {
+        if (course->course_limit <= course->current_number_of_enrollments)
+        {
+            course_waitlist.enqueue_to_waitlist(student);
             return 0;
         }
         Course_enrollment_Node *new_Course = new Course_enrollment_Node(course);
         course->current_number_of_enrollments++;
-        if (!head){
+        if (!head)
+        {
             head = tail = new_Course;
             return 1;
         }
-        else{
+        else
+        {
             tail->next = new_Course;
             new_Course->prev = tail;
             tail = new_Course;
@@ -132,7 +143,8 @@ public:
         }
     }
 
-    bool check_course_enrollment(int id){
+    bool check_course_enrollment(int id)
+    {
         bool flag = false;
         if (!head)
         {
@@ -153,7 +165,8 @@ public:
         return flag;
     }
 
-    void view_enrollment_History(){
+    void view_enrollment_History()
+    {
         if (!head)
         {
             cout << "No courses enrolled." << endl;
@@ -169,53 +182,63 @@ public:
         }
     }
 
-    void student_drop_course(int id){
-        if(head == NULL){
+    void student_drop_course(int id)
+    {
+        if (head == NULL)
+        {
             cout << "No courses enrolled." << endl;
             return;
         }
-        Course_enrollment_Node* current = head;
+        Course_enrollment_Node *current = head;
 
-        while(current != NULL && current->course->id != id){
+        while (current != NULL && current->course->id != id)
+        {
             current = current->next;
         }
 
-        if(current == NULL){
-            cout<<"Course Not Found!"<<endl;
+        if (current == NULL)
+        {
+            cout << "Course Not Found!" << endl;
             return;
         }
 
-        if (current == head) {
+        if (current == head)
+        {
             head = head->next;
-            if (head != NULL) {
+            if (head != NULL)
+            {
                 head->prev = NULL;
             }
         }
 
-        else {
+        else
+        {
             current->prev->next = current->next;
-            if (current->next != NULL) {
+            if (current->next != NULL)
+            {
                 current->next->prev = current->prev;
             }
         }
         cout << "Course dropped successfully." << endl;
 
-        Student* student = course_waitlist.dequeue();
+        Student *student = course_waitlist.dequeue_from_waitlist();
 
         current->course->current_number_of_enrollments--;
 
-        student->enrollmentHistory->add_course(current->course, student);
+        student->enrollmentHistory->enroll_course(current->course, student);
 
         delete current;
     }
 };
 
-Student::Student(int studentId, const string& studentName, const string& studentEmail)
-    : id(studentId), name(studentName), email(studentEmail), next(nullptr), enrollmentHistory(nullptr) {
+Student::Student(int studentId, const string &studentName, const string &studentEmail)
+    : id(studentId), name(studentName), email(studentEmail), next(nullptr), enrollmentHistory(nullptr)
+{
     enrollmentHistory = new Course_enrollment_History();
 }
 
-struct stackCourseRegistration{
+struct stackCourseRegistration
+{
     string Coursename;
     int Studentid;
     stackCourseRegistration *next;
@@ -235,7 +258,7 @@ public:
 
     StudentRecords() : head(nullptr) {}
 
-    void add(int id, const string &name, const string &email, string phone,string address,string password)
+    void add(int id, const string &name, const string &email, string phone, string address, string password)
     {
         Student *newStudent = new Student{id, name, email};
         if (!head)
@@ -299,20 +322,22 @@ public:
             temp = temp->next;
         }
     }
-    
+
     void display_details(int id)
     {
         Student *temp = head;
         cout << "Student's Record:\n";
         while (temp)
         {
-            if(temp->id == id){
+            if (temp->id == id)
+            {
                 break;
             }
             temp = temp->next;
         }
-        if(temp == NULL){
-            cout<<"Not Found";
+        if (temp == NULL)
+        {
+            cout << "Not Found";
             return;
         }
         cout << "ID: " << temp->id << ", Name: " << temp->name << ", Email: " << temp->email << endl;
@@ -362,7 +387,7 @@ class bst // Fahmy yeshel w yktbha Raqam 2
 public:
     Course *root;
     bst() { root = nullptr; }
-    Course* addcourse(int idcourse, string namecourse, int creditscourse, string teachers, int limit)
+    Course *addcourse(int idcourse, string namecourse, int creditscourse, string teachers, int limit)
     {
         Course *newcourse = new Course(idcourse, namecourse, creditscourse, teachers, limit, 0);
         if (root == nullptr)
@@ -401,7 +426,7 @@ public:
             return newcourse;
         }
     }
-    int dropCourse(int id)
+    int deleteCourse(int id)
     {
         Course *temp = root;
         Course *parent = nullptr;
@@ -507,7 +532,8 @@ Student *linear_search_student(Student *head, int student_id)
     return NULL;
 }
 
-Course *binary_search_course(Course *root, int course_id){
+Course *binary_search_course(Course *root, int course_id)
+{
     Course *current = root;
     while (current != NULL)
     {
@@ -712,7 +738,8 @@ public:
 
     Course *searchWithHashing(int key)
     {
-        if(key < 0){
+        if (key < 0)
+        {
             return NULL;
         }
         int index = hashFunction(key);
