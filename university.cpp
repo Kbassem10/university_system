@@ -97,10 +97,9 @@ struct Course_enrollment_Node
 struct WaitlistNode
     {
         Student *student;
-        Course* course;
         WaitlistNode *next;
 
-        WaitlistNode(Student *this_student, Course* this_course) : student(this_student), course(this_course), next(nullptr) {}
+        WaitlistNode(Student *this_student) : student(this_student), next(nullptr) {}
     };
 
 // QUEUE
