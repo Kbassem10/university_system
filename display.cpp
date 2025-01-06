@@ -1,4 +1,5 @@
 #include <iostream>
+#include <string>
 using namespace std;
 
 void clearScreen()
@@ -15,7 +16,12 @@ void pause()
     cout << "Press Enter to continue...";
     cin.get();
 }
-
+void Courses_menu()
+{
+}
+void Students_menu()
+{
+}
 void Display_Menu()
 {
     int choice;
@@ -24,8 +30,22 @@ void Display_Menu()
     do
     {
         clearScreen();
-        cout << "\nMenu: \n";
-        // print menu
+        cout << "\n----------------------\n";
+        cout << " Hellhound University\n";
+        cout << "----------------------\n";
+        cout << "1. Courses menu\n";
+        cout << "*containts:"<<endl;
+        cout << "\t ADD,Remove,View Courses\n";
+        cout << "----------------------\n";
+        cout << "2. Students menu\n";
+        cout << "\t ADD,Remove,View students\n";
+        cout << "\t Enroll,Drop,Validate courses enrollment\n";
+        cout << "----------------------\n";
+        cout << "0. Exit\n";
+        cout << "Enter your choice: ";
+
+        cin >> choice;
+        cin.ignore();
         while (true)
         {
             string input;
@@ -40,6 +60,29 @@ void Display_Menu()
                 cout << "Invalid input! Please enter a valid number: ";
             }
         }
-        // switch
+        switch (choice)
+        {
+        case 1:
+        {
+            Courses_menu;
+            break;
+        }
+        case 2:
+        {
+            Students_menu;
+            break;
+        }
+        case 0:
+        {
+            cout << "Exiting program. Goodbye!\n";
+            break;
+        }
+        default:
+            cout << "Invalid choice. Please try again.\n";
+        }
     } while (choice != 0);
+}
+int main()
+{
+    Display_Menu();
 }

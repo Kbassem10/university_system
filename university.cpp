@@ -841,7 +841,7 @@ public:
     }
 };
 
-void validatePrerequisites(Course course, Student Student)
+bool validatePrerequisites(Course course, Student Student)
 {
     bool flag = true;
     while (flag && !course.stack.isEmpty())
@@ -851,11 +851,11 @@ void validatePrerequisites(Course course, Student Student)
     }
     if (flag == false)
     {
-        cout << "Can't take course" << endl;
+        return 0;
     }
     else
     {
-        cout << "Can take" << endl;
+        return 1;
     }
 }
 void Display_remaining_Prerequisites(Course course, Student Student)
