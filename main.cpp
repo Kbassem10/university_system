@@ -56,6 +56,74 @@ public:
             hash.remove_from_hash(id);
         }
     }
+     bool courseexist(int id){
+         return courses_bst.search(id) != nullptr;
+
+    }
+    void addcourse(){
+        int idcourse,credithours,limit;
+        string teachers, namecourse;
+         cout<<"Enter id course: "<<endl;
+         cin>>idcourse;
+         if(courseexist(idcourse)){
+            cout<<" Course with this id is already exist \n";
+             return;
+         }else{
+            cout << "Enter course name: ";
+            cin >> namecourse;
+            cout << "Enter number of credits: ";
+            cin >> creditscourse;
+            cout << "Enter instructor name: ";
+            cin >> teachers;
+            cout << "Enter course enrollment limit: ";
+            cin >> limit;
+            courses_bst_add(idcourse, namecourse, credithours, teachers, limit);
+            cout<<"Course is added";
+         }
+    }
+    void displaycourses(){
+        cout<<"display all courses \n";
+        courses_bst.display();
+
+    }
+    void Removecourse(){
+        int idcourse;
+        cout<< "Enter course id that you want to remove"<<endl;
+        cin>>idcourse;
+        if(courseexist(idcourse)==false){
+            cout<<"This course is not exist.";
+            return;
+        }else{
+            courses_bst_drop(idcourse);
+            cout<<"Course removed";
+        }
+    }
+    void viewpre(){
+        int idcourse;
+        cout<< "Enter course id to see the prequist: "<<endl;
+        cin>>idcourse;
+        Course *course=courses_bst.find(idcourse);
+        displayPrerequisites(course);
+    }
+    void waitlist(){
+         int idcourse;
+        cout << "Enter course id to see the waiting list: ";
+        cin >> idcourse;
+        Course *course=courses_bst.find(idcourse);
+        if(!course){
+            cout<<"not found any course with this id."<<endl;
+            return;
+        }
+        if(course->idcourse.size() <= course->limit){
+            cout<<"no waiting list"<<endl;
+        }
+        else{
+            course->waitlist.displayWaitlist();
+        }
+
+    }
+
+
 
     // DLL
     void enroll_course(int course_id, int student_id)
@@ -139,13 +207,13 @@ public:
         }
     }
 
-    void search_course(int course_id)
+    bool search_course(int course_id)
     {
         Course *course = binary_search_course(courses_bst.root, course_id);
 
         if (course != NULL)
         {
-            cout << "Course: " << course->name << endl;
+            return 1;
         }
         else
         {
