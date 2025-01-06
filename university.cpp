@@ -67,6 +67,8 @@ struct Course
     int course_limit;
     int current_number_of_enrollments;
     stackcourses stack;
+    Course_Waitlist waitlist;
+    
 
     Course(int id, const string &name, int credits, const string &CourseInstructor, int course_limit, int current_number_of_enrollments)
         : id(id), name(name), credits(credits), left(nullptr), right(nullptr), CourseInstructor(CourseInstructor), course_limit(course_limit), current_number_of_enrollments(current_number_of_enrollments) {}
@@ -169,14 +171,14 @@ class Course_enrollment_History{
 public:
     Course_enrollment_Node *head;
     Course_enrollment_Node *tail;
-    Course_Waitlist course_waitlist;
+    //Course_Waitlist course_waitlist;
     Course_enrollment_History() : head(nullptr), tail(nullptr) {}
 
     int enroll_course(Course *course, Student *student)
     {
         if (course->course_limit <= course->current_number_of_enrollments)
         {
-            course_waitlist.enqueue_to_waitlist(student, course);
+            course.waitlist.enqueue_to_waitlist(studen);
             return 0;
         }
         Course_enrollment_Node *new_Course = new Course_enrollment_Node(course);
@@ -273,7 +275,7 @@ public:
         }
         cout << "Course dropped successfully." << endl;
 
-        WaitlistNode *data = course_waitlist.dequeue_from_waitlist(current->course);
+        WaitlistNode *data = course.waitlist.dequeue_from_waitlist();
 
         current->course->current_number_of_enrollments--;
 
