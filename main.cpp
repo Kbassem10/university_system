@@ -28,7 +28,6 @@ public:
             cout << "Enter student email: \n";
             cin >> email;
             student_records.add(id, name, email);
-            cout << "Student Added!" << endl;
         }
         else
         {
@@ -80,8 +79,7 @@ public:
     {
         int idcourse, credithours, limit;
         string teachers, namecourse;
-        cout << "Enter id course: \n"
-             << endl;
+        cout << "Enter id course:" << endl;
         cin >> idcourse;
         if (courseexist(idcourse))
         {
@@ -99,7 +97,6 @@ public:
             cout << "Enter course enrollment limit: \n";
             cin >> limit;
             courses_bst.addcourse(idcourse, namecourse, credithours, teachers, limit);
-            cout << "Course is added\n";
         }
     }
     void displaycourses()
@@ -110,8 +107,7 @@ public:
     void Removecourse()
     {
         int idcourse;
-        cout << "Enter course id that you want to remove\n"
-             << endl;
+        cout << "Enter course id that you want to remove\n";
         cin >> idcourse;
         if (courseexist(idcourse) == false)
         {
@@ -128,9 +124,9 @@ public:
     {
         int course_id;
         int student_id;
-        cout << "Enter course id to see the prequist: \n " << endl;
+        cout << "Enter course id to see the prequist: " << endl;
         cin >> course_id;
-        cout << "Enter Student id: \n " << endl;
+        cout << "Enter Student id:" << endl;
         cin >> student_id;
 
         Course *course = binary_search_course(courses_bst.root, course_id);
@@ -149,7 +145,7 @@ public:
     void waitlist()
     {
         int idcourse;
-        cout << "Enter course id to see the waiting list: ";
+        cout << "Enter course id to see the waiting list: \n";
         cin >> idcourse;
         Course *course = binary_search_course(courses_bst.root, idcourse);
         if (!course)
@@ -197,12 +193,11 @@ public:
         if (validatePrerequisites(course, student) && course->current_number_of_enrollments < course->course_limit)
         {
             student->enrollmentHistory->enroll_course(course, student);
-            student->enrollmentHistory->view_enrollment_History();
-            cout << "Student" << student->id << "Enrolled" << course->id << endl;
+            cout << "Student " << student->id << " Enrolled " << course->id << endl;
         }
         else if (course->current_number_of_enrollments >= course->course_limit)
         {
-            cout << " Course is full so you were add to waitlist.";
+            cout << " Course is full so you were add to waitlist.\n";
             course->waitlist.enqueue_to_waitlist(student);
         }
         else

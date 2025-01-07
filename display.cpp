@@ -12,7 +12,6 @@ void clearScreen()
     system("clear");
 #endif
 }
-
 void pause()
 {
     cout << "Press Enter to continue...";
@@ -88,7 +87,7 @@ void Students_menu(university_main &uni)
 
     switch (choice)
     {
-    case 1:
+    case 1: // Passed
     {
         clearScreen();
         cout << "Adding a student...\n";
@@ -102,7 +101,7 @@ void Students_menu(university_main &uni)
         uni.delete_student();
         break;
     }
-    case 3:
+    case 3: // Passed
     {
         clearScreen();
         cout << "Viewing a student...\n";

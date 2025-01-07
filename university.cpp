@@ -96,7 +96,6 @@ public:
             rear->next = new_student;
             rear = new_student;
         }
-        cout << "Added to waitlist: " << student->name << endl;
     };
 
     WaitlistNode *dequeue_from_waitlist()
@@ -378,7 +377,7 @@ public:
         }
         if (temp == NULL)
         {
-            cout << "Not Found";
+            cout << "Not Found.\n";
             return;
         }
         cout << "ID: " << temp->id << ", Name: " << temp->name << ", Email: " << temp->email << endl;
