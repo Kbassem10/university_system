@@ -28,6 +28,7 @@ public:
             cout << "Enter student email: \n";
             cin >> email;
             student_records.add(id, name, email);
+            cout << "Added Student with id " << id << endl ;
         }
         else
         {
@@ -40,6 +41,7 @@ public:
         cout << "Enter student ID: ";
         cin >> id;
         student_records.remove(id);
+        cout<< "Deleted Student" << id << endl;
     }
     void display_student_details()
     {
@@ -48,29 +50,10 @@ public:
         cin >> id;
         student_records.display_details(id);
     }
-    void display_students()
-    {
+    void display_students(){
         student_records.display();
     }
     // bst
-    void courses_bst_add(int idcourse, string namecourse, int credithours, string teachers)
-    {
-        int limit = 30; // Example limit value
-        Course *new_course = courses_bst.addcourse(idcourse, namecourse, credithours, teachers, limit);
-        if (new_course)
-        {
-            hash.insert_hash(new_course);
-        }
-    }
-
-    void courses_bst_drop(int id)
-    {
-        int course_drop = courses_bst.deleteCourse(id);
-        if (course_drop == 1)
-        {
-            hash.remove_from_hash(id);
-        }
-    }
     bool courseexist(int id)
     {
         return binary_search_course(courses_bst.root, id) != nullptr;
@@ -101,23 +84,23 @@ public:
     }
     void displaycourses()
     {
-        cout << "display all courses \n";
+        cout << "display all courses: \n";
         courses_bst.display(courses_bst.root);
     }
     void Removecourse()
     {
         int idcourse;
-        cout << "Enter course id that you want to remove\n";
+        cout << "Enter course id that you want to remove:\n";
         cin >> idcourse;
         if (courseexist(idcourse) == false)
         {
-            cout << "This course is not exist.\n";
+            cout << "This course does not exist.\n";
             return;
         }
         else
         {
-            courses_bst_drop(idcourse);
-            cout << "Course removed\n";
+            courses_bst.deleteCourse(idcourse);
+            cout << "Course removed.\n";
         }
     }
     void viewpre()
@@ -150,7 +133,7 @@ public:
         Course *course = binary_search_course(courses_bst.root, idcourse);
         if (!course)
         {
-            cout << "not found any course with this id." << endl;
+            cout << "Didn't find any course with this id." << endl;
             return;
         }
         if (course->current_number_of_enrollments <= course->course_limit)
@@ -199,9 +182,8 @@ public:
         {
             cout << " Course is full so you were add to waitlist.\n";
             course->waitlist.enqueue_to_waitlist(student);
-        }
-        else
-        {
+        }else if(validatePrerequisites(course, student)==false){
+            cout<< "This Course is unavailable due to:\n"
             Display_remaining_Prerequisites(course, student);
         }
     }

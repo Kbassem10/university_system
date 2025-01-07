@@ -21,14 +21,14 @@ void pause()
 void Courses_menu(university_main &uni)
 {
     int choice;
-    do
-    {
+    
         cout << "\t\t\t\t Courses Menu \t\t\t\t" << endl;
         cout << "1 - Add a new course\n";
         cout << "2 - Display all courses\n";
         cout << "3 - Remove a course\n";
         cout << "4 - View Course Prerequisites \n";
         cout << "5 - view waiting list \n";
+        cout << "0 - Back to Main Menu\n";
         cout << "Enter your choice: ";
         cin >> choice;
         switch (choice)
@@ -65,7 +65,8 @@ void Courses_menu(university_main &uni)
         default:
             cout << "Invalid choice. Please try again.\n";
         }
-    } while (choice != 0);
+        pause();
+    
 }
 void Students_menu(university_main &uni)
 {

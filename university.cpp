@@ -37,7 +37,6 @@ public:
     {
         if (top == nullptr)
         {
-            cout << "Stack is empty!";
             return -1;
         }
         else
@@ -102,7 +101,6 @@ public:
     {
         if (!front)
         {
-            cout << "Waitlist is empty." << endl;
             return NULL;
         }
         WaitlistNode *temp = front;
@@ -111,7 +109,6 @@ public:
         {
             rear = nullptr;
         }
-        cout << "Enrolled from waitlist: " << temp->student->name << endl;
         return temp;
     }
 
@@ -119,7 +116,6 @@ public:
     {
         if (front == nullptr)
         {
-            cout << "Waitlist is empty." << endl;
             return;
         }
 
@@ -167,8 +163,7 @@ struct Course_enrollment_Node
 };
 
 // DLL
-class Course_enrollment_History
-{
+class Course_enrollment_History{
 public:
     Course_enrollment_Node *head;
     Course_enrollment_Node *tail;
@@ -241,7 +236,6 @@ public:
     {
         if (head == NULL)
         {
-            cout << "No courses enrolled." << endl;
             return;
         }
         Course_enrollment_Node *current = head;
@@ -253,7 +247,6 @@ public:
 
         if (current == NULL)
         {
-            cout << "Course Not Found!" << endl;
             return;
         }
 
@@ -274,7 +267,6 @@ public:
                 current->next->prev = current->prev;
             }
         }
-        cout << "Course dropped successfully." << endl;
 
         WaitlistNode *data = current->course->waitlist.dequeue_from_waitlist();
 
@@ -314,14 +306,12 @@ public:
             tail->next = newStudent;
             tail = newStudent;
         }
-        cout << "Student added: " << name << endl;
     }
 
     void remove(int id)
     {
         if (!head)
         {
-            cout << "Student list is empty.\n";
             return;
         }
 
@@ -330,7 +320,6 @@ public:
             Student *toDelete = head;
             head = head->next;
             delete toDelete;
-            cout << "Student with ID " << id << " removed successfully.\n";
             return;
         }
 
@@ -342,14 +331,12 @@ public:
 
         if (!current->next)
         {
-            cout << "Student with ID " << id << " not found.\n";
             return;
         }
 
         Student *toDelete = current->next;
         current->next = current->next->next;
         delete toDelete;
-        cout << "Student with ID " << id << " removed successfully.\n";
     }
 
     void display() const
@@ -478,7 +465,6 @@ public:
         }
         if (temp == nullptr)
         {
-            cout << "course does not exist";
             return 0;
         }
         if (temp->left == nullptr || temp->right == nullptr)
