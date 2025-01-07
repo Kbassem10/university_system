@@ -12,56 +12,61 @@ void clearScreen()
     system("clear");
 #endif
 }
+
 void pause()
 {
     cout << "Press Enter to continue...";
     cin.ignore();
     cin.get();
 }
-
-
 void Courses_menu(university_main &uni)
 {
     int choice;
-    do{
-        cout<<"\t\t\t\t Courses Menu \t\t\t\t"<<endl;
-        cout << "1. Add a new course\n";
-        cout << "2. Display all courses\n";
-        cout << "3. Remove a course\n";
-        cout << "4. View Course Prerequisites \n";
-        cout<< "5. view waiting list \n";
+    do
+    {
+        cout << "\t\t\t\t Courses Menu \t\t\t\t" << endl;
+        cout << "1 - Add a new course\n";
+        cout << "2 - Display all courses\n";
+        cout << "3 - Remove a course\n";
+        cout << "4 - View Course Prerequisites \n";
+        cout << "5 - view waiting list \n";
         cout << "Enter your choice: ";
         cin >> choice;
-        switch(choice){
+        switch (choice)
+        {
         case 1:
+            clearScreen();
+            cout << "Adding course...\n";
             uni.addcourse();
             break;
         case 2:
+            clearScreen();
+            cout << "Displaying all courses...\n";
             uni.displaycourses();
             break;
         case 3:
+            clearScreen();
+            cout << "Removing course...\n";
             uni.Removecourse();
             break;
         case 4:
-            int course_id;
-            int student_id;
-
-            cout<< "Enter course id to see the prequist: "<<endl;
-            cin>>course_id;
-
-            cout<< "Enter Student id to see the prequist: "<<endl;
-            cin>>student_id;
-
-            uni.viewpre(course_id, student_id);
+            clearScreen();
+            cout << "Viewing Course Prerequisites...\n";
+            uni.viewpre();
             break;
         case 5:
+            clearScreen();
+            cout << "view waiting list...\n";
             uni.waitlist();
             break;
+        case 0:
+            clearScreen();
+            cout << "Returning to Main Menu...\n";
+            return;
         default:
             cout << "Invalid choice. Please try again.\n";
         }
-    }
-        while (choice != 0);
+    } while (choice != 0);
 }
 void Students_menu(university_main &uni)
 {
@@ -75,6 +80,8 @@ void Students_menu(university_main &uni)
     cout << "5 - Drop a Course\n";
     cout << "6 - Display enrollments\n";
     cout << "7 - Display students\n";
+    cout << "8 - Sort Students\n";
+    cout << "9 - Search Student\n";
     cout << "0 - Back to Main Menu\n";
     cout << "Enter your choice: ";
     cin >> choice;
@@ -83,75 +90,70 @@ void Students_menu(university_main &uni)
     {
     case 1:
     {
+        clearScreen();
         cout << "Adding a student...\n";
-        int id;
-        string name;
-        string email;
-        cout << "Enter student id: \n";
-        cin >> id;
-        cout << "Enter student name: \n";
-        cin >> name;
-        cout << "Enter student email: \n";
-        cin >> email;
-        uni.add_student(id, name, email);
+        uni.add_student();
         break;
     }
     case 2:
     {
+        clearScreen();
         cout << "Removing a student...\n";
-        int id;
-        cout << "Enter student ID: ";
-        cin >> id;
-        uni.delete_student(id);
+        uni.delete_student();
         break;
     }
     case 3:
     {
+        clearScreen();
         cout << "Viewing a student...\n";
-        int id;
-        cout << "Enter student ID: ";
-        cin >> id;
-        uni.display_student_details(id);
+        uni.display_student_details();
         break;
     }
     case 4:
     {
+        clearScreen();
         cout << "Enrolling in a course...\n";
-        int student_id;
-        cout << "Enter student ID: ";
-        cin >> student_id;
-        int course_id;
-        cout << "Enter course ID: ";
-        cin >> course_id;
-        uni.enroll_course(course_id, student_id);
+        uni.enroll_course();
         break;
     }
     case 5:
     {
+        clearScreen();
         cout << "Dropping a course...\n";
-        int student_id;
-        cout << "Enter student ID: ";
-        cin >> student_id;
-        int course_id;
-        cout << "Enter course ID: ";
-        cin >> course_id;
-        uni.student_drop_course(course_id, student_id);
+        uni.student_drop_course();
         break;
     }
     case 6:
     {
-        cout << "Displaying enrollments\n";
-        int student_id;
-        cout << "Enter student ID: ";
-        cin >> student_id;
-        uni.display_enrollments(student_id);
+        clearScreen();
+        cout << "Displaying enrollments...\n";
+        uni.display_enrollments();
         break;
     }
     case 7:
     {
-        cout << "Displaying students\n";
+        clearScreen();
+        cout << "Displaying students...\n";
+        uni.display_students();
     }
+    case 8:
+    {
+        clearScreen();
+        cout << "Sorting Students...\n";
+        uni.sort_linked_list_by_id();
+    }
+    case 9:
+    {
+        clearScreen();
+        cout << "Searching for Student...\n";
+        uni.search_student();
+    }
+    case 0:
+        clearScreen();
+        cout << "Returning to Main Menu...\n";
+        return;
     default:
+        clearScreen();
         cout << "Invalid choice. Please try again.\n";
     }
     pause();
@@ -162,9 +164,9 @@ void Display_Menu(university_main &uni)
     do
     {
         clearScreen();
-        cout << "\n----------------------\n";
-        cout << " HellHound University\n";
-        cout << "----------------------\n";
+        cout << "\n\t\t\t\t----------------------\t\t\t\t\n";
+        cout << " \t\t\t\tHellHound University\t\t\t\t\n";
+        cout << "\t\t\t\t----------------------\t\t\t\t\n";
         cout << "1. Courses Menu\n";
         cout << "\t add,remove,display,view prerequisites\n";
         cout << "2. Students Menu\n";
@@ -176,21 +178,24 @@ void Display_Menu(university_main &uni)
         switch (choice)
         {
         case 1:
+            clearScreen();
             Courses_menu(uni);
             break;
         case 2:
+            clearScreen();
             Students_menu(uni);
             break;
         case 0:
+            clearScreen();
             cout << "Exiting program. Goodbye!\n";
             break;
         default:
+            clearScreen();
             cout << "Invalid choice. Please try again.\n";
             pause();
         }
     } while (choice != 0);
 }
-
 
 int main()
 {

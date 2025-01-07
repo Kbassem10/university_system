@@ -66,12 +66,12 @@ struct Student
 };
 
 struct WaitlistNode
-    {
-        Student *student;
-        WaitlistNode *next;
+{
+    Student *student;
+    WaitlistNode *next;
 
-        WaitlistNode(Student *this_student) : student(this_student), next(nullptr) {}
-    };
+    WaitlistNode(Student *this_student) : student(this_student), next(nullptr) {}
+};
 
 // student struct
 
@@ -79,7 +79,6 @@ struct WaitlistNode
 class Course_Waitlist
 {
 public:
-
     WaitlistNode *front;
     WaitlistNode *rear;
 
@@ -97,7 +96,7 @@ public:
             rear->next = new_student;
             rear = new_student;
         }
-        cout << "Added to waitlist: " << student->name<< endl;
+        cout << "Added to waitlist: " << student->name << endl;
     };
 
     WaitlistNode *dequeue_from_waitlist()
@@ -133,8 +132,11 @@ public:
             current = current->next;
         }
     }
+    bool queue_is_empty()
+    {
+        return front == nullptr;
+    }
 };
-
 
 // COURSE struct
 struct Course
@@ -149,7 +151,7 @@ struct Course
     int current_number_of_enrollments;
     stackcourses stack;
     Course_Waitlist waitlist;
-    
+
     Course(int id, const string &name, int credits, const string &CourseInstructor, int course_limit, int current_number_of_enrollments)
         : id(id), name(name), credits(credits), left(nullptr), right(nullptr), CourseInstructor(CourseInstructor), course_limit(course_limit), current_number_of_enrollments(current_number_of_enrollments) {}
 };
@@ -166,11 +168,12 @@ struct Course_enrollment_Node
 };
 
 // DLL
-class Course_enrollment_History{
+class Course_enrollment_History
+{
 public:
     Course_enrollment_Node *head;
     Course_enrollment_Node *tail;
-    //Course_Waitlist course_waitlist;
+    // Course_Waitlist course_waitlist;
     Course_enrollment_History() : head(nullptr), tail(nullptr) {}
 
     int enroll_course(Course *course, Student *student)
@@ -178,7 +181,7 @@ public:
         if (course->course_limit <= course->current_number_of_enrollments)
         {
             course->waitlist.enqueue_to_waitlist(student);
-            return 0;   
+            return 0;
         }
         Course_enrollment_Node *new_Course = new Course_enrollment_Node(course);
         course->current_number_of_enrollments++;
@@ -853,7 +856,7 @@ public:
 };
 
 // function to validate the the Prerequisites using a stack
-bool validatePrerequisites(Course* course, Student* Student)
+bool validatePrerequisites(Course *course, Student *Student)
 {
     bool flag = true;
     while (flag && !course->stack.isEmpty())
@@ -871,7 +874,7 @@ bool validatePrerequisites(Course* course, Student* Student)
     }
 }
 // function to display the remaining Prerequisites in the course
-void Display_remaining_Prerequisites(Course* course, Student* Student)
+void Display_remaining_Prerequisites(Course *course, Student *Student)
 {
     bool flag = true;
     while (!course->stack.isEmpty())
