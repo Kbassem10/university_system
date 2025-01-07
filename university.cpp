@@ -55,26 +55,6 @@ public:
     }
 };
 
-// COURSE struct
-struct Course
-{
-    int id;
-    string name;
-    int credits;
-    Course *left;
-    Course *right;
-    string CourseInstructor;
-    int course_limit;
-    int current_number_of_enrollments;
-    stackcourses stack;
-    Course_Waitlist waitlist;
-    
-
-    Course(int id, const string &name, int credits, const string &CourseInstructor, int course_limit, int current_number_of_enrollments)
-        : id(id), name(name), credits(credits), left(nullptr), right(nullptr), CourseInstructor(CourseInstructor), course_limit(course_limit), current_number_of_enrollments(current_number_of_enrollments) {}
-};
-
-// student struct
 struct Student
 {
     int id;
@@ -85,17 +65,6 @@ struct Student
     Student(int studentId, const string &studentName, const string &studentEmail);
 };
 
-// DLL Node
-struct Course_enrollment_Node
-{
-    Course *course;
-    Course_enrollment_Node *next;
-    Course_enrollment_Node *prev;
-
-    Course_enrollment_Node(Course *course)
-        : course(course), next(nullptr), prev(nullptr) {}
-};
-
 struct WaitlistNode
     {
         Student *student;
@@ -103,6 +72,8 @@ struct WaitlistNode
 
         WaitlistNode(Student *this_student) : student(this_student), next(nullptr) {}
     };
+
+// student struct
 
 // QUEUE
 class Course_Waitlist
@@ -114,9 +85,9 @@ public:
 
     Course_Waitlist() : front(nullptr), rear(nullptr) {}
 
-    void enqueue_to_waitlist(Student *student, Course* course)
+    void enqueue_to_waitlist(Student *student)
     {
-        WaitlistNode *new_student = new WaitlistNode(student, course);
+        WaitlistNode *new_student = new WaitlistNode(student);
         if (!rear)
         {
             front = rear = new_student;
@@ -126,10 +97,10 @@ public:
             rear->next = new_student;
             rear = new_student;
         }
-        cout << "Added to waitlist: " << student->name <<"of the course of : "<< course->name<< endl;
+        cout << "Added to waitlist: " << student->name<< endl;
     };
 
-    WaitlistNode *dequeue_from_waitlist(Course* course)
+    WaitlistNode *dequeue_from_waitlist()
     {
         if (!front)
         {
@@ -146,7 +117,7 @@ public:
         return temp;
     }
 
-    void displayWaitlist(Course* course) const
+    void displayWaitlist() const
     {
         if (front == nullptr)
         {
@@ -158,12 +129,40 @@ public:
         WaitlistNode *current = front;
         while (current != nullptr)
         {
-            if(current->course == course){
-                cout << "- " << current->student->name << endl;
-            }
+            cout << "- " << current->student->name << endl;
             current = current->next;
         }
     }
+};
+
+
+// COURSE struct
+struct Course
+{
+    int id;
+    string name;
+    int credits;
+    Course *left;
+    Course *right;
+    string CourseInstructor;
+    int course_limit;
+    int current_number_of_enrollments;
+    stackcourses stack;
+    Course_Waitlist waitlist;
+    
+    Course(int id, const string &name, int credits, const string &CourseInstructor, int course_limit, int current_number_of_enrollments)
+        : id(id), name(name), credits(credits), left(nullptr), right(nullptr), CourseInstructor(CourseInstructor), course_limit(course_limit), current_number_of_enrollments(current_number_of_enrollments) {}
+};
+
+// DLL Node
+struct Course_enrollment_Node
+{
+    Course *course;
+    Course_enrollment_Node *next;
+    Course_enrollment_Node *prev;
+
+    Course_enrollment_Node(Course *course)
+        : course(course), next(nullptr), prev(nullptr) {}
 };
 
 // DLL
@@ -178,8 +177,8 @@ public:
     {
         if (course->course_limit <= course->current_number_of_enrollments)
         {
-            course.waitlist.enqueue_to_waitlist(studen);
-            return 0;
+            course->waitlist.enqueue_to_waitlist(student);
+            return 0;   
         }
         Course_enrollment_Node *new_Course = new Course_enrollment_Node(course);
         course->current_number_of_enrollments++;
@@ -275,12 +274,11 @@ public:
         }
         cout << "Course dropped successfully." << endl;
 
-        WaitlistNode *data = course.waitlist.dequeue_from_waitlist();
+        WaitlistNode *data = current->course->waitlist.dequeue_from_waitlist();
 
         current->course->current_number_of_enrollments--;
 
-        //7ad yezabat di 3ashan fiha 7aga
-        data->student->enrollmentHistory->enroll_course(data->course, data->student);
+        data->student->enrollmentHistory->enroll_course(current->course, data->student);
 
         delete current;
     }
@@ -855,13 +853,13 @@ public:
 };
 
 // function to validate the the Prerequisites using a stack
-bool validatePrerequisites(Course course, Student Student)
+bool validatePrerequisites(Course* course, Student* Student)
 {
     bool flag = true;
-    while (flag && !course.stack.isEmpty())
+    while (flag && !course->stack.isEmpty())
     {
-        int id = course.stack.pop();
-        flag = Student.enrollmentHistory->check_course_enrollment(id);
+        int id = course->stack.pop();
+        flag = Student->enrollmentHistory->check_course_enrollment(id);
     }
     if (flag == false)
     {
@@ -873,13 +871,13 @@ bool validatePrerequisites(Course course, Student Student)
     }
 }
 // function to display the remaining Prerequisites in the course
-void Display_remaining_Prerequisites(Course course, Student Student)
+void Display_remaining_Prerequisites(Course* course, Student* Student)
 {
     bool flag = true;
-    while (!course.stack.isEmpty())
+    while (!course->stack.isEmpty())
     {
-        int id = course.stack.pop();
-        flag = Student.enrollmentHistory->check_course_enrollment(id);
+        int id = course->stack.pop();
+        flag = Student->enrollmentHistory->check_course_enrollment(id);
         if (flag == false)
         {
             cout << "Didn't take Course with ID: " << id << endl;

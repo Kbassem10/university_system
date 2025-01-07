@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include "main.cpp"
+
 using namespace std;
 
 void clearScreen()
@@ -42,7 +43,16 @@ void Courses_menu(university_main &uni)
             uni.Removecourse();
             break;
         case 4:
-            uni.viewpre();
+            int course_id;
+            int student_id;
+
+            cout<< "Enter course id to see the prequist: "<<endl;
+            cin>>course_id;
+
+            cout<< "Enter Student id to see the prequist: "<<endl;
+            cin>>student_id;
+
+            uni.viewpre(course_id, student_id);
             break;
         case 5:
             uni.waitlist();

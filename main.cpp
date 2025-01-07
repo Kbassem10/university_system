@@ -97,13 +97,18 @@ public:
             cout<<"Course removed";
         }
     }
-    void viewpre(){
-        int idcourse;
-        cout<< "Enter course id to see the prequist: "<<endl;
-        cin>>idcourse;
-        Course *course= binary_search_course(courses_bst.root, idcourse);
-        Display_remaining_Prerequisites(course);//bos di bta5od 2 inputs ro7 bos 3aleha felk a5er fel university.cpp w 3adel kol el araf da
+    void viewpre(int course_id, int student_id){
+        Course* course = binary_search_course(courses_bst.root, course_id);
+        Student* student = linear_search_student(student_records.head ,student_id);
+
+        if(course_id && student_id){
+            Display_remaining_Prerequisites(course, student);
+        }
+        else{
+            cout<<"There is no Student or course with that id"<<endl;
+        }
     }
+
     void waitlist(){
          int idcourse;
         cout << "Enter course id to see the waiting list: ";
@@ -118,7 +123,7 @@ public:
         }
         else{
             //el ta7t di el tari2a el wa7ida bel shakl el 7ali ya2ema hanetar ne8ayar 7agat ketir mooot
-            course_enrollment_DLL.course_waitlist.displayWaitlist(course);
+            course->waitlist.displayWaitlist();
         }
     }
 
@@ -144,7 +149,7 @@ public:
             cout << "Course Not Found!" << endl;
             return;
         }
-        if (validatePrerequisites(*course, *student))
+        if (validatePrerequisites(course, student))
         {
             student->enrollmentHistory->enroll_course(course, student);
             student->enrollmentHistory->view_enrollment_History();
@@ -153,7 +158,7 @@ public:
 
         else
         {
-            Display_remaining_Prerequisites(*course, *student);
+            Display_remaining_Prerequisites(course, student);
         }
     }
 
