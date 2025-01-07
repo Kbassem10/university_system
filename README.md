@@ -1,55 +1,78 @@
-# Data Structures Course Project - Fall 2024
+# University System
 
-## University Management System
+This project is a simple university management system that allows users to manage courses and students. It provides functionalities to add, remove, and display courses and students, as well as enroll students in courses and manage course prerequisites.
 
-This project involves designing a university management system that efficiently handles student records, course information, enrollment histories, and course registrations using a variety of data structures. It integrates components such as linked lists, stacks, queues, binary search trees, and hash tables to ensure optimal performance for diverse operations.
+## Features
 
-### Features
+- Add, remove, and display courses
+- Add, remove, and display students
+- Enroll students in courses
+- Drop courses for students
+- View course prerequisites
+- View waiting list for courses
+- Sort and search students
 
-1. **Student Records Management**: 
-   - Uses a Single Linked List (SLL) to store and manage student details.
-   - Functionalities include adding, removing, and displaying student records.
+## Requirements
 
-2. **Course Records Management**: 
-   - Implements a Binary Search Tree (BST) to organize and search course information.
-   - Supports adding and dropping courses.
+- C++ compiler (e.g., g++)
+- Standard C++ libraries
 
-3. **Course Enrollment History**: 
-   - Employs a Double Linked List (DLL) to track each student's course history.
-   - Allows adding and viewing enrollment records.
+## Setup
 
-4. **Course Registration**: 
-   - Validates course prerequisites using a Stack.
-   - Ensures students meet prerequisites before registration.
+1. Clone the repository:
+    ```sh
+    git clone <repository_url>
+    ```
+2. Navigate to the project directory:
+    ```sh
+    cd university_system
+    ```
+3. Compile the project:
+    ```sh
+    g++ -o university_system main.cpp display.cpp
+    ```
 
-5. **Course Waitlist Management**: 
-   - Manages waitlists using a Queue.
-   - Supports adding students to waitlists and enrolling them when spots become available.
+## Usage
 
-6. **Search and Sort Operations**: 
-   - Implements search functionalities for students and courses.
-   - Provides sorting capabilities for student records.
+1. Run the compiled program:
+    ```sh
+    ./university_system
+    ```
+2. Follow the on-screen instructions to navigate through the menus and manage courses and students.
 
-7. **Hash Table for Fast Access**: 
-   - Enhances lookup efficiency with a Hash Table.
-   - Includes collision handling and efficient search operations.
+## File Structure
 
-### Usage Instructions
+- `main.cpp`: Contains the main logic and data structures for the university system.
+- `display.cpp`: Contains functions for displaying menus and handling user input.
 
-1. **Compilation**: 
-   - Use a C++ compiler to compile the source files located in the `src` directory.
+## Functions
 
-2. **Running the Application**: 
-   - Execute the compiled binary to start the university management system.
+### main.cpp
 
-3. **Testing**: 
-   - Test cases are provided in the `tests` directory. Compile and run `tests/tests.cpp` to validate functionalities.
+- `class university_main`: Main class containing methods for managing courses and students.
+- `void addcourse()`: Adds a new course.
+- `void displaycourses()`: Displays all courses.
+- `void Removecourse()`: Removes a course.
+- `void viewpre()`: Views course prerequisites.
+- `void waitlist()`: Views the waiting list for a course.
+- `void add_student()`: Adds a new student.
+- `void delete_student()`: Removes a student.
+- `void display_student_details()`: Displays details of a student.
+- `void enroll_course()`: Enrolls a student in a course.
+- `void student_drop_course()`: Drops a course for a student.
+- `void display_enrollments()`: Displays all enrollments.
+- `void display_students()`: Displays all students.
+- `void sort_linked_list_by_id()`: Sorts students by ID.
+- `void search_student()`: Searches for a student by ID.
 
-### Future Enhancements
+### display.cpp
 
-- Implement a graphical user interface (GUI) for better user interaction.
-- Extend the system to include more features such as course grading and student performance tracking.
+- `void clearScreen()`: Clears the console screen.
+- `void pause()`: Pauses the console and waits for user input.
+- `void Courses_menu(university_main &uni)`: Displays the courses menu and handles user input.
+- `void Students_menu(university_main &uni)`: Displays the students menu and handles user input.
+- `void Display_Menu(university_main &uni)`: Displays the main menu and handles user input.
 
-### Acknowledgments
+## License
 
-- This project is developed as part of the Data Structures course for Fall 2024 at the University.
+This project is licensed under the MIT License.
