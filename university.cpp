@@ -862,15 +862,12 @@ bool validatePrerequisites(Course *course, Student *Student)
     {
         int id = course->stack.pop();
         flag = Student->enrollmentHistory->check_course_enrollment(id);
+        if (flag == false)
+        {
+            break;
+        }
     }
-    if (flag == false)
-    {
-        return 0;
-    }
-    else
-    {
-        return 1;
-    }
+    return flag;
 }
 // function to display the remaining Prerequisites in the course
 void Display_remaining_Prerequisites(Course *course, Student *Student)
