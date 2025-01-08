@@ -38,8 +38,15 @@ public:
     {
         cout << "Enter student id: \n";
         int id = int_checker();
-        student_records.remove(id);
-        cout << "Deleted Student: " << id << endl;
+        Student *student = linear_search_student(student_records.head, student_id) if (student == NULL)
+        {
+            cout << "Not found.\n";
+        }
+        else
+        {
+            student_records.remove(id);
+            cout << "Deleted Student: " << id << endl;
+        }
     }
     void display_student_details()
     {
@@ -194,21 +201,25 @@ public:
         if (student == NULL)
         {
             cout << "Student Not Found!\n";
-            return;
         }
-        cout << "Enter course ID: ";
-        int course_id = int_checker();
-        Course *course = binary_search_course(courses_bst.root, course_id);
-        if (course == NULL)
+        else
         {
-            cout << "Course Not Found!" << endl;
-            return;
-        }
-        if (student->enrollmentHistory->check_course_enrollment(course_id))
-        {
-            student->enrollmentHistory->student_drop_course(course_id);
-            auto_enroll_course(course, course->waitlist.dequeue_from_waitlist()->student);
-            return;
+            cout << "Enter course ID: ";
+            int course_id = int_checker();
+            Course *course = binary_search_course(courses_bst.root, course_id);
+            if (course == NULL)
+            {
+                cout << "Course Not Found!" << endl;
+            }
+            else if (student->enrollmentHistory->check_course_enrollment(course_id))
+            {
+                student->enrollmentHistory->student_drop_course(course_id);
+                auto_enroll_course(course, course->waitlist.dequeue_from_waitlist()->student);
+            }
+            else
+            {
+                cout << "course not enrolled.\n";
+            }
         }
     }
     void display_enrollments()
@@ -257,7 +268,14 @@ public:
         cout << "Enter course ID: ";
         int course_id = int_checker();
         Course *course = binary_search_course(courses_bst.root, course_id);
-        courses_bst.display(course);
+        if (course != null)
+        {
+            courses_bst.display(course);
+        }
+        else
+        {
+            cout << "Course not found.\n";
+        }
     }
     // sort
     void sort_linked_list_by_id()

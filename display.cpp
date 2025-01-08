@@ -92,7 +92,6 @@ void Students_menu(university_main &uni)
     cout << "6 - Display enrollments\n";
     cout << "7 - Display students\n";
     cout << "8 - Sort Students\n";
-    cout << "9 - Search Student\n";
     cout << "0 - Back to Main Menu\n";
     cout << "Enter your choice: ";
     int choice = int_checker();
@@ -153,13 +152,6 @@ void Students_menu(university_main &uni)
         clearScreen();
         cout << "Sorting Students...\n";
         uni.sort_linked_list_by_id();
-        break;
-    }
-    case 9:
-    {
-        clearScreen();
-        cout << "Searching for Student...\n";
-        uni.search_student();
         break;
     }
     case 0:
