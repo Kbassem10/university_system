@@ -58,6 +58,7 @@ void Courses_menu(university_main &uni)
     case 5:
         clearScreen();
         cout << "Displaying waiting list...\n";
+        
         uni.waitlist();
         break;
     case 6:
@@ -112,7 +113,7 @@ void Students_menu(university_main &uni)
         uni.delete_student();
         break;
     }
-    case 3: // Passed
+    case 3:
     {
         clearScreen();
         cout << "Viewing a student...\n";

@@ -80,10 +80,14 @@ public:
             int limit = int_checker();
             cout << "Enter number of credits: \n";
             int credithours = int_checker();
+
             cout << "Enter course name: \n";
             cin >> namecourse;
+            getline(cin, namecourse);
+
             cout << "Enter instructor name: \n";
-            cin >> teachers;
+            cin>>teachers;
+            getline(cin, teachers);
 
             courses_bst.addcourse(idcourse, namecourse, credithours, teachers, limit);
         }
@@ -138,7 +142,7 @@ public:
             cout << "Didn't find any course with this id." << endl;
             return;
         }
-        if (course->current_number_of_enrollments <= course->course_limit)
+        if (course->waitlist.queue_is_empty())
         {
             cout << "no waiting list" << endl;
         }
