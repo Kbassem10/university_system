@@ -1,1 +1,1 @@
-int choice;
+ pause();

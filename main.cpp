@@ -38,7 +38,8 @@ public:
     {
         cout << "Enter student id: \n";
         int id = int_checker();
-        Student *student = linear_search_student(student_records.head, student_id) if (student == NULL)
+        Student *student = linear_search_student(student_records.head, id);
+        if (student == NULL)
         {
             cout << "Not found.\n";
         }
@@ -268,7 +269,7 @@ public:
         cout << "Enter course ID: ";
         int course_id = int_checker();
         Course *course = binary_search_course(courses_bst.root, course_id);
-        if (course != null)
+        if (course != NULL)
         {
             courses_bst.display(course);
         }
