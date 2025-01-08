@@ -15,9 +15,8 @@ public:
     // single linked list
     void add_student()
     {
-        int id;
         cout << "Enter student id: \n";
-        cin >> id;
+        int id = int_checker();
         Student *student = linear_search_student(student_records.head, id);
         if (student == NULL)
         {
@@ -28,7 +27,7 @@ public:
             cout << "Enter student email: \n";
             cin >> email;
             student_records.add(id, name, email);
-            cout << "Added Student with id " << id << endl ;
+            cout << "Added Student with id " << id << endl;
         }
         else
         {
@@ -37,20 +36,19 @@ public:
     }
     void delete_student()
     {
-        int id;
-        cout << "Enter student ID: ";
-        cin >> id;
+        cout << "Enter student id: \n";
+        int id = int_checker();
         student_records.remove(id);
-        cout<< "Deleted Student" << id << endl;
+        cout << "Deleted Student: " << id << endl;
     }
     void display_student_details()
     {
-        int id;
-        cout << "Enter student ID: ";
-        cin >> id;
+        cout << "Enter student id: \n";
+        int id = int_checker();
         student_records.display_details(id);
     }
-    void display_students(){
+    void display_students()
+    {
         student_records.display();
     }
     // bst
@@ -60,10 +58,8 @@ public:
     }
     void addcourse()
     {
-        int idcourse, credithours, limit;
-        string teachers, namecourse;
         cout << "Enter id course:" << endl;
-        cin >> idcourse;
+        int idcourse = int_checker();
         if (courseexist(idcourse))
         {
             cout << " Course with this id is already exist \n";
@@ -71,14 +67,16 @@ public:
         }
         else
         {
+            string teachers, namecourse;
+            cout << "Enter course enrollment limit: \n";
+            int limit = int_checker();
+            cout << "Enter number of credits: \n";
+            int credithours = int_checker();
             cout << "Enter course name: \n";
             cin >> namecourse;
-            cout << "Enter number of credits: \n";
-            cin >> credithours;
             cout << "Enter instructor name: \n";
             cin >> teachers;
-            cout << "Enter course enrollment limit: \n";
-            cin >> limit;
+
             courses_bst.addcourse(idcourse, namecourse, credithours, teachers, limit);
         }
     }
@@ -89,9 +87,8 @@ public:
     }
     void Removecourse()
     {
-        int idcourse;
-        cout << "Enter course id that you want to remove:\n";
-        cin >> idcourse;
+        cout << "Enter id course:" << endl;
+        int idcourse = int_checker();
         if (courseexist(idcourse) == false)
         {
             cout << "This course does not exist.\n";
@@ -105,12 +102,10 @@ public:
     }
     void viewpre()
     {
-        int course_id;
-        int student_id;
         cout << "Enter course id to see the prequist: " << endl;
-        cin >> course_id;
+        int course_id = int_checker();
         cout << "Enter Student id:" << endl;
-        cin >> student_id;
+        int student_id = int_checker();
 
         Course *course = binary_search_course(courses_bst.root, course_id);
         Student *student = linear_search_student(student_records.head, student_id);
@@ -127,9 +122,8 @@ public:
 
     void waitlist()
     {
-        int idcourse;
         cout << "Enter course id to see the waiting list: \n";
-        cin >> idcourse;
+        int idcourse = int_checker();
         Course *course = binary_search_course(courses_bst.root, idcourse);
         if (!course)
         {
@@ -149,19 +143,17 @@ public:
 
     void enroll_course()
     {
-
-        int student_id;
         cout << "Enter student ID: ";
-        cin >> student_id;
+        int student_id = int_checker();
         Student *student = linear_search_student(student_records.head, student_id);
         if (student == NULL)
         {
             cout << "Student Not Found!\n";
             return;
         }
-        int course_id;
+
         cout << "Enter course ID: ";
-        cin >> course_id;
+        int course_id = int_checker();
         Course *course = binary_search_course(courses_bst.root, course_id);
         if (student->enrollmentHistory->check_course_enrollment(course_id))
         {
@@ -182,8 +174,10 @@ public:
         {
             cout << " Course is full so you were add to waitlist.\n";
             course->waitlist.enqueue_to_waitlist(student);
-        }else if(validatePrerequisites(course, student)==false){
-            cout<< "This Course is unavailable due to:\n"
+        }
+        else if (validatePrerequisites(course, student) == false)
+        {
+            cout << "This Course is unavailable due to:\n";
             Display_remaining_Prerequisites(course, student);
         }
     }
@@ -194,18 +188,16 @@ public:
 
     void student_drop_course()
     {
-        int student_id;
         cout << "Enter student ID: ";
-        cin >> student_id;
+        int student_id = int_checker();
         Student *student = linear_search_student(student_records.head, student_id);
         if (student == NULL)
         {
             cout << "Student Not Found!\n";
             return;
         }
-        int course_id;
         cout << "Enter course ID: ";
-        cin >> course_id;
+        int course_id = int_checker();
         Course *course = binary_search_course(courses_bst.root, course_id);
         if (course == NULL)
         {
@@ -221,9 +213,8 @@ public:
     }
     void display_enrollments()
     {
-        int id;
-        cout << "Enter student ID: \n";
-        cin >> id;
+        cout << "Enter student id: \n";
+        int id = int_checker();
         Student *student = linear_search_student(student_records.head, id);
         if (student == NULL)
         {
@@ -235,9 +226,8 @@ public:
     // search
     void search_student()
     {
-        int student_id;
         cout << "Enter student ID: ";
-        cin >> student_id;
+        int student_id = int_checker();
         Student *student = linear_search_student(student_records.head, student_id);
         if (student == NULL)
         {
@@ -262,7 +252,13 @@ public:
             cout << "Course Not Found!" << endl;
         }
     }
-
+    void display_course()
+    {
+        cout << "Enter course ID: ";
+        int course_id = int_checker();
+        Course *course = binary_search_course(courses_bst.root, course_id);
+        courses_bst.display(course);
+    }
     // sort
     void sort_linked_list_by_id()
     {
@@ -277,9 +273,11 @@ public:
     }
 
     // hash function
-    void searchWithHashing(int id)
+    void searchWithHashing()
     {
-        Course *Course = hash.searchWithHashing(id);
+        cout << "Enter course ID: ";
+        int course_id = int_checker();
+        Course *Course = hash.searchWithHashing(course_id);
         if (Course)
         {
             cout << "Found" << endl;

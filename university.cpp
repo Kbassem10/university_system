@@ -163,7 +163,8 @@ struct Course_enrollment_Node
 };
 
 // DLL
-class Course_enrollment_History{
+class Course_enrollment_History
+{
 public:
     Course_enrollment_Node *head;
     Course_enrollment_Node *tail;
@@ -868,4 +869,23 @@ void Display_remaining_Prerequisites(Course *course, Student *Student)
             cout << "Didn't take Course with ID: " << id << endl;
         }
     }
+}
+int int_checker()
+{
+    int value;
+    while (true)
+    {
+        string input;
+        getline(cin, input);
+        try
+        {
+            value = stoi(input);
+            break;
+        }
+        catch (...)
+        {
+            cout << "Invalid input! Please enter a valid number: ";
+        }
+    }
+    return value;
 }

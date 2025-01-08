@@ -20,58 +20,69 @@ void pause()
 }
 void Courses_menu(university_main &uni)
 {
-    int choice;
-    
-        cout << "\t\t\t\t Courses Menu \t\t\t\t" << endl;
-        cout << "1 - Add a new course\n";
-        cout << "2 - Display all courses\n";
-        cout << "3 - Remove a course\n";
-        cout << "4 - View Course Prerequisites \n";
-        cout << "5 - view waiting list \n";
-        cout << "0 - Back to Main Menu\n";
-        cout << "Enter your choice: ";
-        cin >> choice;
-        switch (choice)
-        {
-        case 1:
-            clearScreen();
-            cout << "Adding course...\n";
-            uni.addcourse();
-            break;
-        case 2:
-            clearScreen();
-            cout << "Displaying all courses...\n";
-            uni.displaycourses();
-            break;
-        case 3:
-            clearScreen();
-            cout << "Removing course...\n";
-            uni.Removecourse();
-            break;
-        case 4:
-            clearScreen();
-            cout << "Viewing Course Prerequisites...\n";
-            uni.viewpre();
-            break;
-        case 5:
-            clearScreen();
-            cout << "view waiting list...\n";
-            uni.waitlist();
-            break;
-        case 0:
-            clearScreen();
-            cout << "Returning to Main Menu...\n";
-            return;
-        default:
-            cout << "Invalid choice. Please try again.\n";
-        }
-        pause();
-    
+
+    cout << "\t\t\t\t Courses Menu \t\t\t\t" << endl;
+    cout << "1 - Add a new course\n";
+    cout << "2 - Display all courses\n";
+    cout << "3 - Remove a course\n";
+    cout << "4 - View Course Prerequisites \n";
+    cout << "5 - view waiting list \n";
+    cout << "6 - View Course \n";
+    cout << "7 - Search for course with hashing \n";
+    cout << "0 - Back to Main Menu\n";
+    cout << "Enter your choice: ";
+
+    int choice = int_checker();
+    switch (choice)
+    {
+    case 1:
+        clearScreen();
+        cout << "Adding course...\n";
+        uni.addcourse();
+        break;
+    case 2:
+        clearScreen();
+        cout << "Displaying all courses...\n";
+        uni.displaycourses();
+        break;
+    case 3:
+        clearScreen();
+        cout << "Removing course...\n";
+        uni.Removecourse();
+        break;
+    case 4:
+        clearScreen();
+        cout << "Viewing Course Prerequisites...\n";
+        uni.viewpre();
+        break;
+    case 5:
+        clearScreen();
+        cout << "Displaying waiting list...\n";
+        uni.waitlist();
+        break;
+    case 6:
+        clearScreen();
+        cout << "viewing Course...\n";
+        uni.display_course();
+        break;
+    case 7:
+        clearScreen();
+        cout << "Searching for Course with hashing...\n";
+        uni.searchWithHashing();
+        break;
+    case 0:
+        clearScreen();
+        cout << "Returning to Main Menu...\n";
+        return;
+    default:
+        cout << "Invalid choice. Please try again.\n";
+    }
+    pause();
 }
 void Students_menu(university_main &uni)
 {
     clearScreen();
-    int choice;
+
     cout << "\t\t\t\t Students Menu \t\t\t\t\n";
     cout << "1 - Add Student\n";
     cout << "2 - Remove Student\n";
@@ -84,7 +95,7 @@ void Students_menu(university_main &uni)
     cout << "9 - Search Student\n";
     cout << "0 - Back to Main Menu\n";
     cout << "Enter your choice: ";
-    cin >> choice;
+    int choice = int_checker();
 
     switch (choice)
     {
@@ -135,18 +146,21 @@ void Students_menu(university_main &uni)
         clearScreen();
         cout << "Displaying students...\n";
         uni.display_students();
+        break;
     }
     case 8:
     {
         clearScreen();
         cout << "Sorting Students...\n";
         uni.sort_linked_list_by_id();
+        break;
     }
     case 9:
     {
         clearScreen();
         cout << "Searching for Student...\n";
         uni.search_student();
+        break;
     }
     case 0:
         clearScreen();
@@ -173,7 +187,7 @@ void Display_Menu(university_main &uni)
         cout << "\t add,remove,display,enroll course,drop course,validate courses enrollment, view enrollments\n";
         cout << "0. Exit\n";
         cout << "Enter your choice: ";
-        cin >> choice;
+        choice = int_checker();
 
         switch (choice)
         {
