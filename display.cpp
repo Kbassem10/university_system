@@ -70,6 +70,7 @@ void Courses_menu(university_main &uni)
         cout << "Searching for Course with hashing...\n";
         uni.searchWithHashing();
         break;
+        
     case 0:
         clearScreen();
         cout << "Returning to Main Menu...\n";

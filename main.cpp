@@ -111,6 +111,8 @@ public:
         else
         {
             courses_bst.deleteCourse(idcourse);
+            hash.remove_from_hash(idcourse);
+
             cout << "Course removed.\n";
         }
     }
