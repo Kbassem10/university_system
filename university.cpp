@@ -131,6 +131,18 @@ public:
     {
         return front == nullptr;
     }
+    Student* seach_in_waitlist(int student_id){
+        WaitlistNode *current = front;
+        while (current != NULL)
+        {
+            if (current->student->id == student_id)
+            {
+                return current->student;
+            }
+            current = current->next;
+        }
+        return NULL;
+    }
 };
 
 // COURSE struct
@@ -173,7 +185,11 @@ public:
 
     int enroll_course(Course *course, Student *student)
     {
-        if (course->course_limit <= course->current_number_of_enrollments)
+        Student* student_in_queue = course->waitlist.seach_in_waitlist(student->id);
+        if(student_in_queue){
+            cout<<"You can't enroll now because it's full and you are already IN THE WAITING LIST!! WHEN SOMEONE DROP YOU WILL BE ADDED"<<endl;
+        }
+        if (course->course_limit <= course->current_number_of_enrollments && !student_in_queue)
         {
             course->waitlist.enqueue_to_waitlist(student);
             return 0;

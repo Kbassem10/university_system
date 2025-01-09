@@ -61,6 +61,7 @@ void Courses_menu(university_main &uni)
         uni.waitlist();
         break;
     case 6:
+    
         clearScreen();
         cout << "viewing Course...\n";
         uni.display_course();

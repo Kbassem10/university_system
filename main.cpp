@@ -198,6 +198,13 @@ public:
             cout << "Course Not Found!" << endl;
             return;
         }
+
+        Student* student_in_queue = course->waitlist.seach_in_waitlist(student_id);
+        if(student_in_queue){
+            cout<<"You can't enroll now because it's full and you are already IN THE WAITING LIST!! WHEN SOMEONE DROP YOU WILL BE ADDED"<<endl;
+            return;
+        }
+        
         if (validatePrerequisites(course, student) && course->current_number_of_enrollments < course->course_limit)
         {
             student->enrollmentHistory->enroll_course(course, student);
