@@ -242,8 +242,7 @@ public:
 
         Course_enrollment_Node *current = head;
         cout << "Enrollment History:" << endl;
-        while (current)
-        {
+        while (current){
             cout << "- " << current->course->name << endl;
             current = current->next;
         }

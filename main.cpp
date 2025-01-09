@@ -294,6 +294,7 @@ public:
         else
         {
             cout << "Course Not Found!" << endl;
+            return 0;
         }
     }
     void display_course()
