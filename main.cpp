@@ -7,11 +7,11 @@ public:
     StudentRecords student_records;
     hash_table hash;
     bst courses_bst;
-    // course_registration_stack
     university_main()
         : course_enrollment_DLL(), student_records(), hash(), courses_bst()
     {
     }
+
     // single linked list
     void add_student()
     {
@@ -89,7 +89,9 @@ public:
             cin>>teachers;
             getline(cin, teachers);
 
-            courses_bst.addcourse(idcourse, namecourse, credithours, teachers, limit);
+            Course* course = courses_bst.addcourse(idcourse, namecourse, credithours, teachers, limit);
+
+            hash.insert_hash(course);
         }
     }
     void displaycourses()
