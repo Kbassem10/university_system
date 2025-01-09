@@ -77,7 +77,25 @@ public:
         {
             string teachers, namecourse;
             cout << "Enter course enrollment limit: \n";
-            int limit = int_checker();
+            int limit;
+            while (true)
+            {
+                string input;
+                getline(cin, input);
+                try
+                {
+                    limit = stoi(input);
+                    if(limit < 1){
+                        cout << "Invalid input! Please enter a valid number (number > 0): ";
+                        continue;
+                    }
+                    break;
+                }
+                catch (...)
+                {
+                    cout << "Invalid input! Please enter a valid number: ";
+                }
+            }
             cout << "Enter number of credits: \n";
             int credithours = int_checker();
 
@@ -152,7 +170,6 @@ public:
         }
         else
         {
-            // el ta7t di el tari2a el wa7ida bel shakl el 7ali ya2ema hanetar ne8ayar 7agat ketir mooot
             course->waitlist.displayWaitlist();
         }
     }
