@@ -438,30 +438,30 @@ public:
         delete root;
     }
 
-    Course *addcourse(int idcourse, string namecourse, int creditscourse, string teachers, int limit)
+    Course *addcourse(int idcourse, string namecourse, int creditscourse, string teachers, int limit, int prerequisite_size)
     {
         Course *newcourse = new Course(idcourse, namecourse, creditscourse, teachers, limit, 0);
 
-        // Input for prerequisites
-        cout << "How many prerequisites does this course have? ";
-        int size;
-        cin >> size;
-
-        for (int i = 0; i < size; i++)
+        for (int i = 0; i < prerequisite_size; i++)
         {
-            cout << "Enter prerequisite course ID: ";
-            int course_id;
-            cin >> course_id;
-
-            // Validate if the prerequisite course exists
-            Course *prerequisite = binary_search_course(root, course_id);
-            if (prerequisite)
-            {
-                newcourse->stack.push(course_id);
-            }
-            else
-            {
-                cout << "Error: Course ID " << course_id << " does not exist. Skipping." << endl;
+            while (true){
+                cout << "Enter prerequisite course ID: ";
+                int course_id;
+                cin >> course_id;
+                Course *prerequisite = binary_search_course(root, course_id);
+                if (prerequisite)
+                {
+                    newcourse->stack.push(course_id);
+                    break;
+                }
+                else if (course_id < 1){
+                    cout<<"Skip! "<<endl;
+                    break;
+                }
+                else
+                {
+                    cout << "Error: Course ID " << course_id << " does not exist. Enter 0 to Skip" << endl;
+                }
             }
         }
 

@@ -107,7 +107,12 @@ public:
             cin>>teachers;
             getline(cin, teachers);
 
-            Course* course = courses_bst.addcourse(idcourse, namecourse, credithours, teachers, limit);
+            // Input for prerequisites
+            cout << "How many prerequisites does this course have? ";
+            int size;
+            cin >> size;
+
+            Course* course = courses_bst.addcourse(idcourse, namecourse, credithours, teachers, limit, size);
 
             hash.insert_hash(course);
         }

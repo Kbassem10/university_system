@@ -20,7 +20,6 @@ void pause()
 }
 void Courses_menu(university_main &uni)
 {
-
     cout << "\t\t\t\t Courses Menu \t\t\t\t" << endl;
     cout << "1 - Add a new course\n";
     cout << "2 - Display all courses\n";
