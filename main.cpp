@@ -22,10 +22,13 @@ public:
         {
             string name;
             string email;
+
             cout << "Enter student name: \n";
-            cin >> name;
+            getline(cin, name);
+
             cout << "Enter student email: \n";
             cin >> email;
+
             student_records.add(id, name, email);
             cout << "Added Student with id " << id << endl;
         }
@@ -33,6 +36,7 @@ public:
         {
             cout << "already exists" << endl;
         }
+        
     }
     void delete_student()
     {
@@ -81,6 +85,7 @@ public:
             while (true)
             {
                 string input;
+                
                 getline(cin, input);
                 try
                 {
@@ -100,11 +105,9 @@ public:
             int credithours = int_checker();
 
             cout << "Enter course name: \n";
-            cin >> namecourse;
             getline(cin, namecourse);
 
             cout << "Enter instructor name: \n";
-            cin>>teachers;
             getline(cin, teachers);
 
             // Input for prerequisites
@@ -139,6 +142,7 @@ public:
             cout << "Course removed.\n";
         }
     }
+
     void viewpre()
     {
         cout << "Enter course id to see the prequist: " << endl;

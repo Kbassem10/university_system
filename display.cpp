@@ -80,7 +80,6 @@ void Courses_menu(university_main &uni)
     pause();
 }
 
-
 void Students_menu(university_main &uni)
 {
     clearScreen();
