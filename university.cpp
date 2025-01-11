@@ -16,9 +16,6 @@ struct stackCourseRegistration
     int CourseID;
     stackCourseRegistration *next;
     stackCourseRegistration(int Courseid) : CourseID(Courseid), next(nullptr) {}
-    ~stackCourseRegistration(){
-        delete next;
-    }
 };
 
 // STACK
@@ -245,10 +242,9 @@ public:
 
     bool check_course_enrollment(int id)
     {
-        bool flag = false;
         if (!head)
         {
-            return flag;
+            return false;
         }
         else
         {
@@ -257,12 +253,12 @@ public:
             {
                 if (current->course->id == id)
                 {
-                    flag = true;
+                    return true;
                 }
                 current = current->next;
             }
         }
-        return flag;
+        return false;
     }
 
     void view_enrollment_History()
@@ -909,27 +905,50 @@ public:
 };
 
 // function to validate the the Prerequisites using a stack
-bool validatePrerequisites(Course *course, Student *Student)
+void copyStack(stackcourses &source, stackcourses &temp)
 {
-    bool flag = true;
-    while (flag && !course->stack.isEmpty())
+    stackcourses auxStack;
+
+    while (!source.isEmpty())
     {
-        int id = course->stack.pop();
-        flag = Student->enrollmentHistory->check_course_enrollment(id);
-        if (flag == false)
-        {
-            break;
+        auxStack.push(source.pop());
+    }
+
+    while (!auxStack.isEmpty())
+    {
+        int courseID = auxStack.pop();
+        source.push(courseID);
+        temp.push(courseID);
+    }
+}
+
+bool validatePrerequisites(Course *course, Student *Student)
+{    
+    stackcourses temp;
+    copyStack(course->stack, temp);
+
+    while(!temp.isEmpty())
+    {
+        int id = temp.pop();
+        int check = Student->enrollmentHistory->check_course_enrollment(id);
+        if (!check){
+            return false;
         }
     }
-    return flag;
+    return true;
 }
+
 // function to display the remaining Prerequisites in the course
 void Display_remaining_Prerequisites(Course *course, Student *Student)
 {
+    stackcourses temp;
+    copyStack(course->stack, temp);
+
     bool flag = true;
-    while (!course->stack.isEmpty())
+    
+    while (!temp.isEmpty())
     {
-        int id = course->stack.pop();
+        int id = temp.pop();
         flag = Student->enrollmentHistory->check_course_enrollment(id);
         if (flag == false)
         {
@@ -937,6 +956,7 @@ void Display_remaining_Prerequisites(Course *course, Student *Student)
         }
     }
 }
+
 int int_checker()
 {
     int value;

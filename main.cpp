@@ -36,7 +36,7 @@ public:
         {
             cout << "already exists" << endl;
         }
-        
+
     }
     void delete_student()
     {
@@ -213,18 +213,20 @@ public:
             cout<<"You can't enroll now because it's full and you are already IN THE WAITING LIST!! WHEN SOMEONE DROP YOU WILL BE ADDED"<<endl;
             return;
         }
-        
-        if (validatePrerequisites(course, student) && course->current_number_of_enrollments < course->course_limit)
+
+        bool validate_Prerequisites = validatePrerequisites(course, student);
+
+        if (validate_Prerequisites && course->current_number_of_enrollments < course->course_limit)
         {
             student->enrollmentHistory->enroll_course(course, student);
             cout << "Student " << student->id << " Enrolled " << course->id << endl;
         }
-        else if (course->current_number_of_enrollments >= course->course_limit)
+        else if (course->current_number_of_enrollments >= course->course_limit && validate_Prerequisites)
         {
             cout << " Course is full so you were add to waitlist.\n";
             course->waitlist.enqueue_to_waitlist(student);
         }
-        else if (validatePrerequisites(course, student) == false)
+        else if (validate_Prerequisites == false)
         {
             cout << "This Course is unavailable due to:\n";
             Display_remaining_Prerequisites(course, student);

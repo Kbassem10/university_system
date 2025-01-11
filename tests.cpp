@@ -153,6 +153,11 @@ int main()
     // test_balance_courses();
     // test_search_with_hashing();
     // test_waitlist();
-    test_view_enrollment_History();
+    //test_view_enrollment_History();
+
+
+
+    //test_validatePrerequisites();
+    //test_enroll_course()
     return 0;
 }
