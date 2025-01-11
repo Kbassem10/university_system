@@ -149,7 +149,7 @@ public:
         Course *course = binary_search_course(courses_bst.root, course_id);
         Student *student = linear_search_student(student_records.head, student_id);
 
-        if (course_id && student_id)
+        if (course && student)
         {
             Display_remaining_Prerequisites(course, student);
         }
