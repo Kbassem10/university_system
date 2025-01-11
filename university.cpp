@@ -16,6 +16,9 @@ struct stackCourseRegistration
     int CourseID;
     stackCourseRegistration *next;
     stackCourseRegistration(int Courseid) : CourseID(Courseid), next(nullptr) {}
+    ~stackCourseRegistration(){
+        delete next;
+    }
 };
 
 // STACK
@@ -26,6 +29,13 @@ public:
     stackcourses()
     {
         top = nullptr;
+    }
+    ~stackcourses()
+    {
+        while (top != nullptr)
+        {
+            pop();
+        }
     }
     void push(int CourseID)
     {
@@ -62,6 +72,9 @@ struct Student
     Student *next;
     Course_enrollment_History *enrollmentHistory;
     Student(int studentId, const string &studentName, const string &studentEmail);
+    ~Student(){
+        delete next;
+    }
 };
 
 struct WaitlistNode
@@ -70,6 +83,9 @@ struct WaitlistNode
     WaitlistNode *next;
 
     WaitlistNode(Student *this_student) : student(this_student), next(nullptr) {}
+    ~WaitlistNode(){
+        delete next;
+    }
 };
 
 // student struct
@@ -82,6 +98,10 @@ public:
     WaitlistNode *rear;
 
     Course_Waitlist() : front(nullptr), rear(nullptr) {}
+    ~Course_Waitlist(){
+        delete front;
+        delete rear;
+    }
 
     void enqueue_to_waitlist(Student *student)
     {
@@ -109,6 +129,7 @@ public:
         {
             rear = nullptr;
         }
+        temp->next = NULL;
         return temp;
     }
 
@@ -161,6 +182,10 @@ struct Course
 
     Course(int id, const string &name, int credits, const string &CourseInstructor, int course_limit, int current_number_of_enrollments)
         : id(id), name(name), credits(credits), left(nullptr), right(nullptr), CourseInstructor(CourseInstructor), course_limit(course_limit), current_number_of_enrollments(current_number_of_enrollments) {}
+    ~Course() {
+        delete left;
+        delete right;
+    }
 };
 
 // DLL Node
@@ -172,6 +197,10 @@ struct Course_enrollment_Node
 
     Course_enrollment_Node(Course *course)
         : course(course), next(nullptr), prev(nullptr) {}
+    ~Course_enrollment_Node(){
+        delete next;
+        delete prev;
+    }
 };
 
 // DLL
@@ -182,6 +211,10 @@ public:
     Course_enrollment_Node *tail;
     // Course_Waitlist course_waitlist;
     Course_enrollment_History() : head(nullptr), tail(nullptr) {}
+    ~Course_enrollment_History(){
+        delete head;
+        delete tail;
+    }
 
     int enroll_course(Course *course, Student *student)
     {
@@ -309,6 +342,10 @@ public:
     Student *tail;
 
     StudentRecords() : head(nullptr) {}
+    ~StudentRecords(){
+        delete head;
+        delete tail;
+    }
 
     void add(int id, const string &name, const string &email)
     {
@@ -335,6 +372,7 @@ public:
         {
             Student *toDelete = head;
             head = head->next;
+            toDelete->next = NULL;
             delete toDelete;
             return;
         }
@@ -352,6 +390,7 @@ public:
 
         Student *toDelete = current->next;
         current->next = current->next->next;
+        toDelete->next = NULL;
         delete toDelete;
     }
 
@@ -394,6 +433,11 @@ class bst
 public:
     Course *root;
     bst() { root = nullptr; }
+
+    ~bst(){
+        delete root;
+    }
+
     Course *addcourse(int idcourse, string namecourse, int creditscourse, string teachers, int limit)
     {
         Course *newcourse = new Course(idcourse, namecourse, creditscourse, teachers, limit, 0);
@@ -721,6 +765,10 @@ private:
         int key;
         Course *value;
         hash_node *next_node;
+        
+        ~hash_node(){
+            delete next_node;
+        }
     };
     hash_node **table;
     int table_size;
@@ -763,6 +811,10 @@ public:
         {
             table[i] = NULL;
         }
+    }
+    ~hash_table(){
+        delete table;
+
     }
 
     // hashing function
