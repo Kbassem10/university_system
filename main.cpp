@@ -195,8 +195,8 @@ public:
         }
     }
 
-    void enroll_course()
-    {
+    void enroll_course(){
+
         cout << "Enter student ID: ";
         int student_id = int_checker();
         Student *student = linear_search_student(student_records.head, student_id);
@@ -228,54 +228,61 @@ public:
 
         bool validate_Prerequisites = validatePrerequisites(course, student);
 
-        if (validate_Prerequisites && course->current_number_of_enrollments < course->course_limit)
-        {
-            student->enrollmentHistory->enroll_course(course, student);
-            cout << "Student " << student->id << " Enrolled " << course->id << endl;
-        }
-        else if (course->current_number_of_enrollments >= course->course_limit && validate_Prerequisites)
-        {
-            cout << " Course is full so you were add to waitlist.\n";
-            course->waitlist.enqueue_to_waitlist(student);
-        }
-        else if (validate_Prerequisites == false)
-        {
-            cout << "This Course is unavailable due to:\n";
+        if (!validate_Prerequisites) {
+            cout << "Error: You cannot enroll in this course due to missing prerequisites:\n";
             Display_remaining_Prerequisites(course, student);
+            return;
         }
+
+        if (course->current_number_of_enrollments >= course->course_limit) {
+            cout << "Course is full. You have been added to the waitlist.\n";
+            course->waitlist.enqueue_to_waitlist(student);
+            return;
+        }
+        student->enrollmentHistory->enroll_course(course, student);
+        cout << "Student " << student->id << " has been enrolled in course " << course->id << ".\n";
     }
+
     void auto_enroll_course(Course *course, Student *student)
     {
         student->enrollmentHistory->enroll_course(course, student);
     }
 
-    void student_drop_course()
-    {
+    void student_drop_course() {
         cout << "Enter student ID: ";
         int student_id = int_checker();
         Student *student = linear_search_student(student_records.head, student_id);
-        if (student == NULL)
-        {
+
+        if (student == NULL) {
             cout << "Student Not Found!\n";
+            return;
         }
-        else
-        {
-            cout << "Enter course ID: ";
-            int course_id = int_checker();
-            Course *course = binary_search_course(courses_bst.root, course_id);
-            if (course == NULL)
-            {
-                cout << "Course Not Found!" << endl;
-            }
-            else if (student->enrollmentHistory->check_course_enrollment(course_id))
-            {
-                student->enrollmentHistory->student_drop_course(course_id);
-                auto_enroll_course(course, course->waitlist.dequeue_from_waitlist()->student);
-            }
-            else
-            {
-                cout << "course not enrolled.\n";
-            }
+
+        cout << "Enter course ID: ";
+        int course_id = int_checker();
+        Course *course = binary_search_course(courses_bst.root, course_id);
+
+        if (course == NULL) {
+            cout << "Course Not Found!\n";
+            return;
+        }
+
+        if (!student->enrollmentHistory->check_course_enrollment(course_id)) {
+            cout << "Student is not enrolled in this course.\n";
+            return;
+        }
+
+        student->enrollmentHistory->student_drop_course(course_id);
+        cout << "Success: Student " << student_id << " has been dropped from course " << course_id << ".\n";
+
+        WaitlistNode* waitlistStudent = course->waitlist.dequeue_from_waitlist();
+        if (waitlistStudent != nullptr) {
+            auto_enroll_course(course, waitlistStudent->student);
+            cout << "Student " << waitlistStudent->student->id << " has been enrolled from the waitlist.\n";
+        } 
+        
+        else {
+            cout << "No students on the waitlist for this course.\n";
         }
     }
     void display_enrollments()

@@ -155,7 +155,6 @@ void Students_menu(university_main &uni)
         uni.sort_linked_list_by_id();
         break;
     }
-    
     case 0:
         clearScreen();
         cout << "Returning to Main Menu...\n";
@@ -167,6 +166,7 @@ void Students_menu(university_main &uni)
     pause();
     
 }
+
 void Display_Menu(university_main &uni)
 {
     int choice;
