@@ -146,6 +146,10 @@ public:
         }
         else
         {
+            if(check_any_student_enrolled(student_records.head ,idcourse)){
+                cout<<"You cannot delete this course while there is someone enrolled to it! "<<endl;
+                return;
+            }
             courses_bst.deleteCourse(idcourse);
             hash.remove_from_hash(idcourse);
 

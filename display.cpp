@@ -170,6 +170,7 @@ void Display_Menu(university_main &uni)
     int choice;
     do
     {
+        
         clearScreen();
         cout << "\n\t\t\t\t----------------------\t\t\t\t\n";
         cout << " \t\t\t\tHellHound University\t\t\t\t\n";
