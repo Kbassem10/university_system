@@ -976,3 +976,31 @@ int int_checker()
     }
     return value;
 }
+
+bool inOrderTraversal(Course* root, int student_id) {
+    if (root == nullptr) return false;
+
+    if (inOrderTraversal(root->left, student_id)) {
+        return true; // Student found in the left subtree
+    }
+
+    // Check the current course's waitlist
+    if (root->waitlist.seach_in_waitlist(student_id)) {
+        return true; // Student found in the current course's waitlist
+    }
+
+    // Check the right subtree
+    if (inOrderTraversal(root->right, student_id)) {
+        return true; // Student found in the right subtree
+    }
+
+    return false; // Student not found in any course's waitlist
+}
+
+// Wrapper function to check if a student is in any course's waitlist
+bool check_student_in_queue(Course* root, Student* student) {
+    if (root == nullptr || student == nullptr) return false;
+
+    // Perform in-order traversal and check for the student's ID
+    return inOrderTraversal(root, student->id);
+}

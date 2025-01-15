@@ -3,7 +3,6 @@
 #include "main.cpp"
 
 using namespace std;
-
 void clearScreen()
 {
 #ifdef _WIN32
@@ -112,6 +111,7 @@ void Students_menu(university_main &uni)
         uni.delete_student();
         break;
     }
+
     case 3: // Passed
     {
         clearScreen();

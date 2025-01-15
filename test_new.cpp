@@ -2,7 +2,6 @@
 #include <string>
 #include "NewCode.cpp"
 using namespace std;
-
 void runTests()
 {
     StudentRecords students;

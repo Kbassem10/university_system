@@ -49,10 +49,20 @@ public:
         }
         else
         {
-            student_records.remove(id);
-            cout << "Deleted Student: " << id << endl;
+            bool check_in_queue = check_student_in_queue(courses_bst.root , student);
+            if(student->enrollmentHistory->head != NULL){
+                cout << "This Student Cannot be deleted because he is enrolled in courses. "<< endl;
+            }
+            else if(check_in_queue){
+                cout << "This Student Cannot be deleted because he is in waitlits of a course. "<< endl;
+            }
+            else{
+                student_records.remove(id);
+                cout << "Deleted Student: " << id << endl;
+            }
         }
     }
+
     void display_student_details()
     {
         cout << "Enter student id: \n";

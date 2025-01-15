@@ -293,18 +293,22 @@ public:
         return true;
     }
 
-    Student *findStudent(int id)
+    StudentNode *findStudent(int student_id)
     {
-        StudentNode *current = head;
-        while (current)
+        if (head == NULL)
         {
-            if (current->data->id == id)
+            return NULL;
+        }
+        StudentNode *current = head;
+        while (current != NULL)
+        {
+            if (current->data->id == student_id)
             {
-                return current->data;
+                return current;
             }
             current = current->next;
         }
-        return nullptr;
+        return NULL;
     }
 
     bool deleteStudent(int id)
@@ -403,17 +407,6 @@ private:
         return node;
     }
 
-    Course *findHelper(CourseNode *node, int id)
-    {
-        if (!node)
-            return nullptr;
-        if (node->data->id == id)
-            return node->data;
-        if (id < node->data->id)
-            return findHelper(node->left, id);
-        return findHelper(node->right, id);
-    }
-
 public:
     CourseRecords() : root(nullptr) {}
 
@@ -431,9 +424,28 @@ public:
         return true;
     }
 
-    Course *findCourse(int id)
+    // search on the BST
+    Course *findCourse(int course_id)
     {
-        return findHelper(root, id);
+        CourseNode *current = root;
+        while (current != NULL){
+            if (current->id == course_id)
+            {
+                return current;
+            }
+
+            if (course_id > current->id)
+            {
+                current = current->right;
+            }
+
+            else if (course_id < current->id)
+            {
+                current = current->left;
+            }
+        }
+
+        return current;
     }
 
     bool addPrerequisite(int courseId, int prerequisiteId)
