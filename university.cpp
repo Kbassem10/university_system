@@ -426,6 +426,39 @@ public:
 // BST to the courses
 class bst
 {
+private:
+    // a helper function to convert the BST to an array
+    void in_order_bts_to_array(Course *root, vector<Course *> &nodes)
+    {
+        if (root == NULL)
+        {
+            return;
+        }
+        in_order_bts_to_array(root->left, nodes);
+        nodes.push_back(root);
+        in_order_bts_to_array(root->right, nodes);
+    }
+
+    // helper function to convert the array to a bst
+    Course *array_to_bts(vector<Course *> &nodes, int start, int end)
+    {
+        if (nodes.size() == 0)
+        {
+            return NULL;
+        }
+        if (start > end)
+        {
+            return NULL;
+        }
+
+        int mid = (start + end) / 2;
+        Course *new_root = nodes[mid];
+
+        new_root->left = array_to_bts(nodes, start, mid - 1);
+        new_root->right = array_to_bts(nodes, mid + 1, end);
+
+        return new_root;
+    }
 public:
     Course *root;
     bst() { root = nullptr; }
@@ -609,6 +642,16 @@ public:
             tempStack.pop();
         }
     }
+
+    // a function to balance the BST
+    Course *balance_bst()
+    {
+        vector<Course *> bts_nodes;
+        in_order_bts_to_array(root, bts_nodes);
+        Course *new_root = array_to_bts(bts_nodes, 0, bts_nodes.size() - 1);
+        return new_root;
+    }
+
 };
 
 // search on the SLL
@@ -708,48 +751,6 @@ Student *sort_student(Student *head)
         current = current->next;
     }
     return head;
-}
-
-// a helper function to convert the BST to an array
-void in_order_bts_to_array(Course *root, vector<Course *> &nodes)
-{
-    if (root == NULL)
-    {
-        return;
-    }
-    in_order_bts_to_array(root->left, nodes);
-    nodes.push_back(root);
-    in_order_bts_to_array(root->right, nodes);
-}
-
-// helper function to convert the array to a bst
-Course *array_to_bts(vector<Course *> &nodes, int start, int end)
-{
-    if (nodes.size() == 0)
-    {
-        return NULL;
-    }
-    if (start > end)
-    {
-        return NULL;
-    }
-
-    int mid = (start + end) / 2;
-    Course *new_root = nodes[mid];
-
-    new_root->left = array_to_bts(nodes, start, mid - 1);
-    new_root->right = array_to_bts(nodes, mid + 1, end);
-
-    return new_root;
-}
-
-// a function to balance the BST
-Course *sort_courses_bts(Course *root)
-{
-    vector<Course *> bts_nodes;
-    in_order_bts_to_array(root, bts_nodes);
-    Course *new_root = array_to_bts(bts_nodes, 0, bts_nodes.size() - 1);
-    return new_root;
 }
 
 // HASH TABLE "BONUS"

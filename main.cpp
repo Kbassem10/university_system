@@ -3,12 +3,11 @@
 class university_main
 {
 public:
-    Course_enrollment_History course_enrollment_DLL;
     StudentRecords student_records;
     hash_table hash;
     bst courses_bst;
     university_main()
-        : course_enrollment_DLL(), student_records(), hash(), courses_bst()
+        :student_records(), hash(), courses_bst()
     {
     }
 
@@ -120,13 +119,12 @@ public:
             cout << "Enter instructor name: \n";
             getline(cin, teachers);
 
-            // Input for prerequisites
             cout << "How many prerequisites does this course have? ";
             int size;
             cin >> size;
 
             Course* course = courses_bst.addcourse(idcourse, namecourse, credithours, teachers, limit, size);
-
+            courses_bst.balance_bst();
             hash.insert_hash(course);
         }
     }
@@ -343,12 +341,6 @@ public:
         student_records.display();
     }
 
-    void balance_courses_bts()
-    {
-        Course *sorted_courses = sort_courses_bts(courses_bst.root);
-        courses_bst.display(courses_bst.root);
-    }
-
     // hash function
     void searchWithHashing()
     {
@@ -365,13 +357,3 @@ public:
         }
     }
 };
-
-// int main()
-// {
-//     // hash_table_test();
-//     // test_sort_student();
-//     // test_case();
-//     // test_bst();
-//     Display_Menu();
-//     return 0;
-// }
