@@ -1,6 +1,5 @@
 #include <iostream>
 #include <string>
-#include <algorithm>
 #include <vector>
 
 using namespace std;
@@ -10,52 +9,51 @@ struct Course;
 class Course_enrollment_History;
 Course *binary_search_course(Course *root, int course_id);
 
-// struct of the stack
+//a struct of the stack to save on it the course that are prequists of another course and when validate it we pop and if empty then the student can resgiter on this course
 struct stackCourseRegistration
 {
-    int CourseID;
-    stackCourseRegistration *next;
-    stackCourseRegistration(int Courseid) : CourseID(Courseid), next(nullptr) {}
+    int CourseID; //the id of every course we add
+    stackCourseRegistration *next; //pointer to the next item on the stack
+    stackCourseRegistration(int Courseid) : CourseID(Courseid), next(nullptr) {} //initialize the course id with what the function gets and the next is with NULL on the initialization
 };
 
-// STACK
+// the stack it self
 class stackcourses
 {
 public:
-    stackCourseRegistration *top;
+    stackCourseRegistration *top; //poiter to the top of the stack
     stackcourses()
     {
-        top = nullptr;
+        top = nullptr; //make the top = null on the cionstructor "means that the stack is empty"
     }
-    ~stackcourses()
+    ~stackcourses() //destructor to save memory while the program is runnning
     {
-        while (top != nullptr)
+        while (top != nullptr) //loops on all of the elements on the stack till it's empty
         {
-            pop();
+            pop(); //pop every item from the stack to reduce memory usage
         }
     }
-    void push(int CourseID)
+    void push(int CourseID) //a function to push a new course to the stack
     {
-        stackCourseRegistration *newnode = new stackCourseRegistration(CourseID);
-        newnode->next = top;
-        top = newnode;
+        stackCourseRegistration *newnode = new stackCourseRegistration(CourseID); //ini the new node of the new course added
+        newnode->next = top; //make the new node next to be the old top
+        top = newnode; //make the top to be now to the next node
     }
-    int pop()
+    int pop() //a function to pop form the stack and remove the last added item
     {
-        if (top == nullptr)
+        if (isEmpty()) //checks if the stack is empty
         {
-            return -1;
+            return -1; //if it's empty return -1
         }
-        else
-        {
-            stackCourseRegistration *temp = top;
-            int poped_course_id = top->CourseID;
-            top = top->next;
-            delete temp;
-            return poped_course_id;
-        }
+
+        stackCourseRegistration *temp = top; //a temp pointer to the top
+        int poped_course_id = top->CourseID; //a temp to the course id so the function can return after deleting it
+        top = top->next; 
+        delete temp;
+        return poped_course_id; //to return the value of the course id
+
     }
-    bool isEmpty()
+    bool isEmpty() //checks if the stack is empty
     {
         return top == nullptr;
     }
@@ -67,16 +65,16 @@ struct Student
     string name;
     string email;
     Student *next;
-    Course_enrollment_History *enrollmentHistory;
+    Course_enrollment_History *enrollmentHistory; //3ashan 5ater yesayev el enrollment History
     Student(int studentId, const string &studentName, const string &studentEmail);
     ~Student(){
         delete next;
     }
 };
 
-struct WaitlistNode
+struct WaitlistNode 
 {
-    Student *student;
+    Student *student; //save the student pointer on the queue for easy access
     WaitlistNode *next;
 
     WaitlistNode(Student *this_student) : student(this_student), next(nullptr) {}
@@ -91,8 +89,8 @@ struct WaitlistNode
 class Course_Waitlist
 {
 public:
-    WaitlistNode *front;
-    WaitlistNode *rear;
+    WaitlistNode *front; //front of the queue
+    WaitlistNode *rear; //rear of the queue
 
     Course_Waitlist() : front(nullptr), rear(nullptr) {}
     ~Course_Waitlist(){
@@ -122,7 +120,7 @@ public:
         }
         WaitlistNode *temp = front;
         front = front->next;
-        if (front == nullptr)
+        if (queue_is_empty()) //if there was only one person on the queue
         {
             rear = nullptr;
         }
@@ -130,9 +128,9 @@ public:
         return temp;
     }
 
-    void displayWaitlist() const
+    void displayWaitlist() const //to display the waiting list O(n)
     {
-        if (front == nullptr)
+        if (queue_is_empty())
         {
             return;
         }
@@ -145,12 +143,13 @@ public:
             current = current->next;
         }
     }
+
     bool queue_is_empty()
     {
         return front == nullptr;
     }
 
-    Student* seach_in_waitlist(int student_id){
+    Student* seach_in_waitlist(int student_id){ // to search if a student found on the waiting list O(n)
         WaitlistNode *current = front;
         while (current != NULL)
         {
@@ -164,7 +163,7 @@ public:
     }
 };
 
-// COURSE struct
+// COURSE struct of a bst
 struct Course
 {
     int id;
@@ -173,8 +172,8 @@ struct Course
     Course *left;
     Course *right;
     string CourseInstructor;
-    int course_limit;
-    int current_number_of_enrollments;
+    int course_limit; //the course limit that detemins whether to add to the dll or the waitlist
+    int current_number_of_enrollments; //to check the number of enrolled students
     stackcourses stack;
     Course_Waitlist waitlist;
 
@@ -207,7 +206,6 @@ class Course_enrollment_History
 public:
     Course_enrollment_Node *head;
     Course_enrollment_Node *tail;
-    // Course_Waitlist course_waitlist;
     Course_enrollment_History() : head(nullptr), tail(nullptr) {}
     ~Course_enrollment_History(){
         delete head;
@@ -216,13 +214,14 @@ public:
 
     int enroll_course(Course *course, Student *student)
     {
-        Student* student_in_queue = course->waitlist.seach_in_waitlist(student->id);
+        Student* student_in_queue = course->waitlist.seach_in_waitlist(student->id); //to check if the student with that id exists on the waiting list
         if(student_in_queue){
             cout<<"You can't enroll now because it's full and you are already IN THE WAITING LIST!! WHEN SOMEONE DROP YOU WILL BE ADDED"<<endl;
+            return 0;
         }
 
         Course_enrollment_Node *new_Course = new Course_enrollment_Node(course);
-        course->current_number_of_enrollments++;
+        course->current_number_of_enrollments++; //to increment the number of enrolled students
         if (!head)
         {
             head = tail = new_Course;
@@ -237,9 +236,9 @@ public:
         }
     }
 
-    bool check_course_enrollment(int id)
+    bool check_course_enrollment(int id) //checks if the course exists on the enrollments
     {
-        if (!head)
+        if (!head) //checks if the list is empty
         {
             return false;
         }
@@ -258,7 +257,7 @@ public:
         return false;
     }
 
-    void view_enrollment_History()
+    void view_enrollment_History() //display all of the courses that this students is enrolled on it
     {
         if (!head)
         {
@@ -278,6 +277,7 @@ public:
     {
         if (head == NULL)
         {
+            cout << "No courses enrolled." << endl;
             return;
         }
         Course_enrollment_Node *current = head;
@@ -287,12 +287,13 @@ public:
             current = current->next;
         }
 
-        if (current == NULL)
+        if (current == NULL) //you reached the end and no course found
         {
+            cout << "No course found with this id." << endl;
             return;
         }
 
-        if (current == head)
+        if (current == head) //you wants to delete the head
         {
             head = head->next;
             if (head != NULL)
@@ -301,7 +302,7 @@ public:
             }
         }
 
-        else
+        else //tail or on the middle
         {
             current->prev->next = current->next;
             if (current->next != NULL)
@@ -328,13 +329,13 @@ public:
     Student *head;
     Student *tail;
 
-    StudentRecords() : head(nullptr) {}
+    StudentRecords() : head(nullptr), tail(nullptr){}
     ~StudentRecords(){
         delete head;
         delete tail;
     }
 
-    void add(int id, const string &name, const string &email)
+    void add(int id, string name, string email)
     {
         Student *newStudent = new Student{id, name, email};
         if (!head)
@@ -355,7 +356,7 @@ public:
             return;
         }
 
-        if (head->id == id)
+        if (head->id == id) //if the node that we wants to delete is the head
         {
             Student *toDelete = head;
             head = head->next;
@@ -365,12 +366,12 @@ public:
         }
 
         Student *current = head;
-        while (current->next && current->next->id != id)
+        while (current->next && current->next->id != id) //loop till you find the id or a NULL
         {
             current = current->next;
         }
 
-        if (!current->next)
+        if (current->next == NULL) //if it's NULL "Not found" return
         {
             return;
         }
@@ -418,6 +419,9 @@ public:
 class bst
 {
 private:
+
+    //Karim balance binary search tree
+
     // a helper function to convert the BST to an array
     void in_order_bts_to_array(Course *root, vector<Course *> &nodes)
     {
@@ -450,6 +454,7 @@ private:
 
         return new_root;
     }
+
 public:
     Course *root;
     bst() { root = nullptr; }
@@ -460,11 +465,11 @@ public:
 
     Course *addcourse(int idcourse, string namecourse, int creditscourse, string teachers, int limit, int prerequisite_size)
     {
-        Course *newcourse = new Course(idcourse, namecourse, creditscourse, teachers, limit, 0);
+        Course *newcourse = new Course(idcourse, namecourse, creditscourse, teachers, limit, 0); //the 0 is the number of students enrolled to the course 
 
-        for (int i = 0; i < prerequisite_size; i++)
+        for (int i = 0; i < prerequisite_size; i++) //loop le8ayet ma 3adad el prerequisite yigi 3ashan nezawedhom
         {
-            while (true){
+            while (true){ //loop 3ashan alw 7at rakam 8alat
                 cout << "Enter prerequisite course ID: ";
                 int course_id;
                 cin >> course_id;
@@ -472,15 +477,15 @@ public:
                 if (prerequisite)
                 {
                     newcourse->stack.push(course_id);
-                    break;
+                    break; //law el rakam sa7 break 3alatol men el loop el gowa
                 }
                 else if (course_id < 1){
                     cout<<"Skip! "<<endl;
-                    break;
+                    break; //law 7at rakam negative aw 0 ye3mel skip lel ittration di
                 }
                 else
                 {
-                    cout << "Error: Course ID " << course_id << " does not exist. Enter 0 to Skip" << endl;
+                    cout << "Error: Course ID " << course_id << " does not exist. Enter 0 to Skip" << endl; //law 7at rakam 8alat teb2a le8ayet ma yekteb rakam sa7 aw 0
                 }
             }
         }
@@ -531,7 +536,7 @@ public:
         Course *parent = nullptr;
 
         // With one or no children
-        while (temp != nullptr && temp->id != id)
+        while (temp != nullptr && temp->id != id) //binary search
         {
             parent = temp;
             if (id < temp->id)
@@ -543,11 +548,13 @@ public:
                 temp = temp->right;
             }
         }
-        if (temp == nullptr)
+
+        if (temp == nullptr) //not found
         {
             return 0;
         }
-        if (temp->left == nullptr || temp->right == nullptr)
+
+        if (temp->left == nullptr || temp->right == nullptr) // one childern so you will add it to the parent directly
         {
             Course *sorryNadeem;
             if (temp->left != nullptr)
@@ -576,7 +583,8 @@ public:
             delete temp;
             return 1;
         }
-        else
+
+        else //ESHRA7O L NAFSAK DA
         { // with 2 children
             Course *next = temp->right;
             Course *nextparent = temp;
@@ -634,7 +642,7 @@ public:
         }
     }
 
-    // a function to balance the BST
+    // a function to balance the BST Karim
     Course *balance_bst()
     {
         vector<Course *> bts_nodes;
@@ -711,13 +719,13 @@ void linked_list_swap(Student *node1, Student *node2)
 }
 
 // sort the SLL
-Student *sort_student(Student *head)
+Student *sort_student(Student *head) //O(N^2)
 {
     if (head == NULL)
     {
         return NULL;
     }
-    if (head->next == NULL)
+    if (head->next == NULL)//checks if the head is the only node
     {
         return head;
     }
@@ -734,8 +742,8 @@ Student *sort_student(Student *head)
                 min = next;
             }
             next = next->next;
-        }
-        if (min != current)
+        } //min hayeb2a 2a2al 7aga fel list
+        if (min != current) 
         {
             linked_list_swap(min, current);
         }
@@ -758,7 +766,7 @@ private:
             delete next_node;
         }
     };
-    hash_node **table;
+    hash_node **table; //initialize to an array of pointers
     int table_size;
     int num_elements;
 
@@ -794,7 +802,7 @@ public:
     {
         table_size = 10;
         num_elements = 0;
-        table = new hash_node *[table_size];
+        table = new hash_node *[table_size]; //initialize an array of pointers of the hash_node with the default size
         for (int i = 0; i < table_size; ++i)
         {
             table[i] = NULL;
@@ -802,7 +810,6 @@ public:
     }
     ~hash_table(){
         delete table;
-
     }
 
     // hashing function
@@ -969,7 +976,7 @@ int int_checker()
     return value;
 }
 
-bool inOrderTraversal(Course* root, int student_id) {
+bool inOrderTraversal(Course* root, int student_id) { // helper function to traverse the whole bst
     if (root == nullptr) return false;
 
     if (inOrderTraversal(root->left, student_id)) {
@@ -987,13 +994,13 @@ bool inOrderTraversal(Course* root, int student_id) {
     return false; 
 }
 
-bool check_student_in_queue(Course* root, Student* student) {
+bool check_student_in_queue(Course* root, Student* student) { //check if the studnet is teh queue of any course
     if (root == nullptr || student == nullptr) return false;
 
     return inOrderTraversal(root, student->id);
 }
 
-bool check_any_student_enrolled(Student* head, int idcourse){
+bool check_any_student_enrolled(Student* head, int idcourse){ //check if any student enrolled to a specific course
     if (head == NULL)
     {
         return NULL;
