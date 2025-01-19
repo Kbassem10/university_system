@@ -26,8 +26,7 @@ void Courses_menu(university_main &uni)
     cout << "3 - Remove a course\n";
     cout << "4 - View Course Prerequisites \n";
     cout << "5 - view waiting list \n";
-    cout << "6 - View Course \n";
-    cout << "7 - Search for course with hashing \n";
+    cout << "6 - Search for course with hashing \n";
     cout << "0 - Back to Main Menu\n";
     cout << "Enter your choice: ";
 
@@ -61,15 +60,9 @@ void Courses_menu(university_main &uni)
         break;
     case 6:
         clearScreen();
-        cout << "viewing Course...\n";
-        uni.display_course();
-        break;
-    case 7:
-        clearScreen();
         cout << "Searching for Course with hashing...\n";
         uni.searchWithHashing();
         break;
-
     case 0:
         clearScreen();
         cout << "Returning to Main Menu...\n";

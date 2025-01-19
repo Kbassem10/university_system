@@ -130,7 +130,7 @@ public:
 
     void displayWaitlist() const //to display the waiting list O(n)
     {
-        if (queue_is_empty())
+        if (front == nullptr)
         {
             return;
         }
@@ -697,37 +697,48 @@ Course *binary_search_course(Course *root, int course_id)
     return current;
 }
 
-// helper function to swap on the sort function
-void linked_list_swap(Student *node1, Student *node2)
+// Helper function to swap nodes in the linked list
+void linked_list_swap(Student **head, Student *node1, Student *node2)
 {
-    if (!node1 || !node2)
-    {
-        return;
+    if (!node1 || !node2 || node1 == node2) return; // No swap needed
+
+    // Find previous nodes of node1 and node2 O(N)
+    Student* prev1 = nullptr, *prev2 = nullptr;
+    Student* temp = *head;
+
+    while (temp) {
+        if (temp->next == node1) prev1 = temp;
+        if (temp->next == node2) prev2 = temp;
+        temp = temp->next;
     }
 
-    int temp_id = node1->id;
-    node1->id = node2->id;
-    node2->id = temp_id;
+    // If node is the head, update head
+    if (node1 == *head) {
+        *head = node2;
+    } else if (node2 == *head) {
+        *head = node1;
+    }
 
-    string temp_name = node1->name;
-    node1->name = node2->name;
-    node2->name = temp_name;
+    // Swap previous nodes' next pointers
+    if (prev1){
+        prev1->next = node2;
+    }
+    if (prev2){
+         prev2->next = node1;
+    }
 
-    string temp_email = node1->email;
-    node1->email = node2->email;
-    node2->email = temp_email;
+    // Swap the next pointers of node1 and node2
+    Student* tempNext = node1->next;
+    node1->next = node2->next;
+    node2->next = tempNext; 
 }
 
-// sort the SLL
+// Sort the singly linked list
 Student *sort_student(Student *head) //O(N^2)
 {
-    if (head == NULL)
+    if (head == NULL || head->next == NULL)
     {
-        return NULL;
-    }
-    if (head->next == NULL)//checks if the head is the only node
-    {
-        return head;
+        return head; // No need to sort if the list is empty or has only one node
     }
 
     Student *current = head;
@@ -742,10 +753,13 @@ Student *sort_student(Student *head) //O(N^2)
                 min = next;
             }
             next = next->next;
-        } //min hayeb2a 2a2al 7aga fel list
+        } // min will point to the node with the smallest id in the remaining list
+
         if (min != current) 
         {
-            linked_list_swap(min, current);
+            linked_list_swap(&head, min, current);
+            // After swapping, current might have moved, so we need to reset it
+            current = min;
         }
         current = current->next;
     }
