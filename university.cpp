@@ -708,51 +708,6 @@ Course *binary_search_course(Course *root, int course_id)
     return current;
 }
 
-// Helper function to swap nodes in the linked list
-void linked_list_swap(Student **head, Student *node1, Student *node2)
-{
-    if (!node1 || !node2 || node1 == node2)
-        return; // No swap needed
-
-    // Find previous nodes of node1 and node2 O(N)
-    Student *prev1 = nullptr, *prev2 = nullptr;
-    Student *temp = *head;
-
-    while (temp)
-    {
-        if (temp->next == node1)
-            prev1 = temp;
-        if (temp->next == node2)
-            prev2 = temp;
-        temp = temp->next;
-    }
-
-    // If node is the head, update head
-    if (node1 == *head)
-    {
-        *head = node2;
-    }
-    else if (node2 == *head)
-    {
-        *head = node1;
-    }
-
-    // Swap previous nodes' next pointers
-    if (prev1)
-    {
-        prev1->next = node2;
-    }
-    if (prev2)
-    {
-        prev2->next = node1;
-    }
-
-    // Swap the next pointers of node1 and node2
-    Student *tempNext = node1->next;
-    node1->next = node2->next;
-    node2->next = tempNext;
-}
-
 // Merge the singly linked lists
 Student *merge(Student *left, Student *right)
 {
@@ -760,7 +715,10 @@ Student *merge(Student *left, Student *right)
         return left;
     if (!left)
         return right;
+
     Student *result = nullptr;
+    Student *tail = nullptr;
+
     if (left->id <= right->id)
     {
         result = left;
@@ -773,24 +731,36 @@ Student *merge(Student *left, Student *right)
     }
     return result;
 }
-// Split SLL
+
+//split SLL
 void split(Student *head, Student **left, Student **right)
 {
-    Student *P1 = head;
-    Student *P2 = head->next;
-    while (P2 != nullptr)
-    {
-        P2 = P2->next;
-        if (P2 != nullptr)
-        {
-            P1 = P1->next;
-            P2 = P2->next;
+    //case where there is no head or only the head
+    if (!head || !head->next) {
+        *left = head;
+        *right = nullptr;
+        return;
+    }
+
+    //get the middle
+    Student *slow = head;
+    Student *fast = head->next;
+
+    //move fast two steps and slow one step to get the middle
+    while (fast) {
+        fast = fast->next;
+        if (fast) {
+            slow = slow->next;
+            fast = fast->next;
         }
     }
+
+    //split on the half to two halves
     *left = head;
-    *right = P1->next;
-    P1->next = nullptr;
+    *right = slow->next;
+    slow->next = nullptr;  //Break the link between the two halves
 }
+
 // Merge-Sort the SLL
 Student *mergesort(Student *head)
 {
@@ -799,9 +769,12 @@ Student *mergesort(Student *head)
 
     Student *left;
     Student *right;
+
     split(head, &left, &right);
+
     left = mergesort(left);
     right = mergesort(right);
+    
     return merge(left, right);
 }
 
