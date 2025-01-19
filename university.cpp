@@ -659,6 +659,7 @@ public:
         vector<Course *> bts_nodes;
         in_order_bts_to_array(root, bts_nodes);
         Course *new_root = array_to_bts(bts_nodes, 0, bts_nodes.size() - 1);
+        root = new_root;
         return new_root;
     }
 };
