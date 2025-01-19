@@ -7,7 +7,7 @@ public:
     hash_table hash;
     bst courses_bst;
     university_main()
-        :student_records(), hash(), courses_bst()
+        : student_records(), hash(), courses_bst()
     {
     }
 
@@ -35,7 +35,6 @@ public:
         {
             cout << "already exists" << endl;
         }
-
     }
     void delete_student()
     {
@@ -48,14 +47,17 @@ public:
         }
         else
         {
-            bool check_in_queue = check_student_in_queue(courses_bst.root , student);
-            if(student->enrollmentHistory->head != NULL){
-                cout << "This Student Cannot be deleted because he is enrolled in courses. "<< endl;
+            bool check_in_queue = check_student_in_queue(courses_bst.root, student);
+            if (student->enrollmentHistory->head != NULL)
+            {
+                cout << "This Student Cannot be deleted because he is enrolled in courses. " << endl;
             }
-            else if(check_in_queue){
-                cout << "This Student Cannot be deleted because he is in waitlits of a course. "<< endl;
+            else if (check_in_queue)
+            {
+                cout << "This Student Cannot be deleted because he is in waitlits of a course. " << endl;
             }
-            else{
+            else
+            {
                 student_records.remove(id);
                 cout << "Deleted Student: " << id << endl;
             }
@@ -73,7 +75,6 @@ public:
         student_records.display();
     }
 
-    
     // bst
     bool courseexist(int id)
     {
@@ -96,12 +97,13 @@ public:
             while (true)
             {
                 string input;
-                
+
                 getline(cin, input);
                 try
                 {
                     limit = stoi(input);
-                    if(limit < 1){
+                    if (limit < 1)
+                    {
                         cout << "Invalid input! Please enter a valid number (number > 0): ";
                         continue;
                     }
@@ -125,7 +127,7 @@ public:
             int size;
             cin >> size;
 
-            Course* course = courses_bst.addcourse(idcourse, namecourse, credithours, teachers, limit, size);
+            Course *course = courses_bst.addcourse(idcourse, namecourse, credithours, teachers, limit, size);
             courses_bst.balance_bst();
             hash.insert_hash(course);
         }
@@ -146,8 +148,9 @@ public:
         }
         else
         {
-            if(check_any_student_enrolled(student_records.head ,idcourse)){
-                cout<<"You cannot delete this course while there is someone enrolled to it! "<<endl;
+            if (check_any_student_enrolled(student_records.head, idcourse))
+            {
+                cout << "You cannot delete this course while there is someone enrolled to it! " << endl;
                 return;
             }
             courses_bst.deleteCourse(idcourse);
@@ -197,7 +200,8 @@ public:
         }
     }
 
-    void enroll_course(){
+    void enroll_course()
+    {
 
         cout << "Enter student ID: ";
         int student_id = int_checker();
@@ -222,21 +226,24 @@ public:
             return;
         }
 
-        Student* student_in_queue = course->waitlist.seach_in_waitlist(student_id);
-        if(student_in_queue){
-            cout<<"You can't enroll now because it's full and you are already IN THE WAITING LIST!! WHEN SOMEONE DROP YOU WILL BE ADDED"<<endl;
+        Student *student_in_queue = course->waitlist.seach_in_waitlist(student_id);
+        if (student_in_queue)
+        {
+            cout << "You can't enroll now because it's full and you are already IN THE WAITING LIST!! WHEN SOMEONE DROP YOU WILL BE ADDED" << endl;
             return;
         }
 
         bool validate_Prerequisites = validatePrerequisites(course, student);
 
-        if (!validate_Prerequisites) {
+        if (!validate_Prerequisites)
+        {
             cout << "Error: You cannot enroll in this course due to missing prerequisites:\n";
             Display_remaining_Prerequisites(course, student);
             return;
         }
 
-        if (course->current_number_of_enrollments >= course->course_limit) {
+        if (course->current_number_of_enrollments >= course->course_limit)
+        {
             cout << "Course is full. You have been added to the waitlist.\n";
             course->waitlist.enqueue_to_waitlist(student);
             return;
@@ -250,12 +257,14 @@ public:
         student->enrollmentHistory->enroll_course(course, student);
     }
 
-    void student_drop_course() {
+    void student_drop_course()
+    {
         cout << "Enter student ID: ";
         int student_id = int_checker();
         Student *student = linear_search_student(student_records.head, student_id);
 
-        if (student == NULL) {
+        if (student == NULL)
+        {
             cout << "Student Not Found!\n";
             return;
         }
@@ -264,12 +273,14 @@ public:
         int course_id = int_checker();
         Course *course = binary_search_course(courses_bst.root, course_id);
 
-        if (course == NULL) {
+        if (course == NULL)
+        {
             cout << "Course Not Found!\n";
             return;
         }
 
-        if (!student->enrollmentHistory->check_course_enrollment(course_id)) {
+        if (!student->enrollmentHistory->check_course_enrollment(course_id))
+        {
             cout << "Student is not enrolled in this course.\n";
             return;
         }
@@ -277,13 +288,15 @@ public:
         student->enrollmentHistory->student_drop_course(course_id);
         cout << "Success: Student " << student_id << " has been dropped from course " << course_id << ".\n";
 
-        WaitlistNode* waitlistStudent = course->waitlist.dequeue_from_waitlist();
-        if (waitlistStudent != nullptr) {
+        WaitlistNode *waitlistStudent = course->waitlist.dequeue_from_waitlist();
+        if (waitlistStudent != nullptr)
+        {
             auto_enroll_course(course, waitlistStudent->student);
             cout << "Student " << waitlistStudent->student->id << " has been enrolled from the waitlist.\n";
-        } 
-        
-        else {
+        }
+
+        else
+        {
             cout << "No students on the waitlist for this course.\n";
         }
     }
@@ -346,7 +359,7 @@ public:
     // sort
     void sort_linked_list_by_id()
     {
-        Student *student_sort = sort_student(student_records.head);
+        sort_student(&(student_records.head));
         student_records.display();
     }
 
