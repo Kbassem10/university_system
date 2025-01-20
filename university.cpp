@@ -802,31 +802,31 @@ private:
     int table_size;
     int num_elements;
 
-    void rehash()
+    void rehash() //rehash function to hash again the function and increase the size of the array to decrease the collisions and improv performance
     {
         int old_table_size = table_size;
-        table_size *= 2;
-        hash_node **new_table = new hash_node *[table_size];
-        for (int i = 0; i < table_size; ++i)
+        table_size *= 2; //double the size of the array
+        hash_node **new_table = new hash_node *[table_size]; //create a new array with the new size
+        for (int i = 0; i < table_size; ++i) // initialize the new array to be al of it with NULL
         {
-            new_table[i] = NULL;
+            new_table[i] = NULL; 
         }
 
-        for (int i = 0; i < old_table_size; ++i)
+        for (int i = 0; i < old_table_size; ++i) //iterate on the old table and put it to the new one
         {
-            hash_node *current = table[i];
-            while (current != NULL)
+            hash_node *current = table[i]; 
+            while (current != NULL) //inner loop on the small linked list of the chaining to rehash them
             {
-                hash_node *next = current->next_node;
-                int new_index = hashFunction(current->key);
-                current->next_node = new_table[new_index];
-                new_table[new_index] = current;
-                current = next;
+                hash_node *next = current->next_node; //to save the next node before changing the main one
+                int new_index = hashFunction(current->key); //getting the new index of the value of the id on the new hash table
+                current->next_node = new_table[new_index]; //make the node to point on the new table index
+                new_table[new_index] = current; //make the current node to put it on the new table
+                current = next; //change the value of the current to be on the next node
             }
         }
 
-        delete[] table;
-        table = new_table;
+        delete[] table; //delete the old table
+        table = new_table; //make the name of the new_table to be the same as the old one
     }
 
 public:
@@ -855,7 +855,7 @@ public:
     {
         int key = value->id;
 
-        if (num_elements > table_size)
+        if ((double)num_elements / table_size > 0.7)
         {
             rehash();
         }
