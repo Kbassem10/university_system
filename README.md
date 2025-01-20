@@ -21,7 +21,7 @@ This project is a simple university management system that allows users to manag
 
 1. Clone the repository:
     ```sh
-    git clone <repository_url>
+    git clone https://github.com/Kbassem10/university_system/
     ```
 2. Navigate to the project directory:
     ```sh
