@@ -310,7 +310,16 @@ public:
             }
         }
 
-        else // tail or on the middle
+        else if (current == tail) //you wants to delete the tail
+        {
+            tail = tail->prev;
+            if (tail != NULL)
+            {
+                tail->next = NULL;
+            }
+        }
+
+        else // delete the middle the middle
         {
             current->prev->next = current->next;
             if (current->next != NULL)
@@ -318,8 +327,8 @@ public:
                 current->next->prev = current->prev;
             }
         }
+
         current->course->current_number_of_enrollments--;
-        delete current;
     }
 };
 

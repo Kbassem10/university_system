@@ -120,6 +120,7 @@ void Students_menu(university_main &uni)
         uni.enroll_course();
         break;
     }
+
     case 5:
     {
         clearScreen();
@@ -165,7 +166,6 @@ void Display_Menu(university_main &uni)
     int choice;
     do
     {
-        
         clearScreen();
         cout << "\n\t\t\t\t----------------------\t\t\t\t\n";
         cout << " \t\t\t\tHellHound University\t\t\t\t\n";
