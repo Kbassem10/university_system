@@ -58,6 +58,7 @@ public:
     }
 };
 
+// student struct
 struct Student
 {
     int id;
@@ -83,8 +84,6 @@ struct WaitlistNode
         delete next;
     }
 };
-
-// student struct
 
 // QUEUE
 class Course_Waitlist
